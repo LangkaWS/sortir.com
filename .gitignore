@@ -71,3 +71,4 @@
 # Environment files
 .env
 .env.test
+.idea
