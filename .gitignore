@@ -71,4 +71,6 @@
 # Environment files
 .env
 .env.test
+
+# Phpstorm
 .idea
