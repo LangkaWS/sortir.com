@@ -15,7 +15,7 @@ class Location
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $locationId;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=30)
@@ -45,7 +45,7 @@ class Location
 
     public function getLocationId(): ?int
     {
-        return $this->locationId;
+        return $this->id;
     }
 
     public function getName(): ?string
