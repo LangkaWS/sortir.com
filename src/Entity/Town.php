@@ -17,12 +17,7 @@ class Town
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $townid;
+    private $townId;
 
     /**
      * @ORM\Column(type="string", length=165)
@@ -35,7 +30,7 @@ class Town
     private $zipCode;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Location::class, mappedBy="town")
+     * @ORM\OneToMany(targetEntity=Location::class, mappedBy="town", orphanRemoval=true)
      */
     private $locations;
 
@@ -44,21 +39,9 @@ class Town
         $this->locations = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getTownId(): ?int
     {
-        return $this->id;
-    }
-
-    public function getTownid(): ?int
-    {
-        return $this->townid;
-    }
-
-    public function setTownid(int $townid): self
-    {
-        $this->townid = $townid;
-
-        return $this;
+        return $this->townId;
     }
 
     public function getName(): ?string
@@ -97,7 +80,7 @@ class Town
     {
         if (!$this->locations->contains($location)) {
             $this->locations[] = $location;
-            $location->addTown($this);
+            $location->setTown($this);
         }
 
         return $this;
@@ -106,7 +89,10 @@ class Town
     public function removeLocation(Location $location): self
     {
         if ($this->locations->removeElement($location)) {
-            $location->removeTown($this);
+            // set the owning side to null (unless already changed)
+            if ($location->getTown() === $this) {
+                $location->setTown(null);
+            }
         }
 
         return $this;

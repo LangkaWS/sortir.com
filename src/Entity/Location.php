@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\LocationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,11 +13,6 @@ class Location
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $locationId;
@@ -45,30 +38,14 @@ class Location
     private $longitude;
 
     /**
-     * @ORM\ManyToMany(targetEntity=town::class, inversedBy="locations")
+     * @ORM\ManyToOne(targetEntity=Town::class, inversedBy="locations")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $town;
-
-    public function __construct()
-    {
-        $this->town = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getLocationId(): ?int
     {
         return $this->locationId;
-    }
-
-    public function setLocationId(int $locationId): self
-    {
-        $this->locationId = $locationId;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -119,26 +96,14 @@ class Location
         return $this;
     }
 
-    /**
-     * @return Collection|town[]
-     */
-    public function getTown(): Collection
+    public function getTown(): ?Town
     {
         return $this->town;
     }
 
-    public function addTown(town $town): self
+    public function setTown(?Town $town): self
     {
-        if (!$this->town->contains($town)) {
-            $this->town[] = $town;
-        }
-
-        return $this;
-    }
-
-    public function removeTown(town $town): self
-    {
-        $this->town->removeElement($town);
+        $this->town = $town;
 
         return $this;
     }
