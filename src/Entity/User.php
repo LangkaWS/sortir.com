@@ -99,7 +99,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -220,12 +220,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getProfilPicture(): ?string
+    public function getProfilePicture(): ?string
     {
         return $this->profilePicture;
     }
 
-    public function setProfilPicture(?string $profilePicture): self
+    public function setProfilePicture(?string $profilePicture): self
     {
         $this->profilePicture = $profilePicture;
 
