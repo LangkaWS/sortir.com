@@ -67,7 +67,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
      */
-    private $profilPicture;
+    private $profilePicture;
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users")
@@ -222,12 +222,12 @@ class User implements UserInterface
 
     public function getProfilPicture(): ?string
     {
-        return $this->profilPicture;
+        return $this->profilePicture;
     }
 
-    public function setProfilPicture(?string $profilPicture): self
+    public function setProfilPicture(?string $profilePicture): self
     {
-        $this->profilPicture = $profilPicture;
+        $this->profilePicture = $profilePicture;
 
         return $this;
     }
