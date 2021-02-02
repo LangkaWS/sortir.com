@@ -17,7 +17,7 @@ class Town
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $townId;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=165)
@@ -41,7 +41,7 @@ class Town
 
     public function getTownId(): ?int
     {
-        return $this->townId;
+        return $this->id;
     }
 
     public function getName(): ?string

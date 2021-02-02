@@ -74,3 +74,6 @@
 
 # Phpstorm
 .idea
+
+# Migrations
+/migrations
