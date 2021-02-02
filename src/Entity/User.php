@@ -102,6 +102,10 @@ class User implements UserInterface
         return (string) $this->email;
     }
 
+    public function getPseudo(): string
+    {
+        return (String) $this->username;
+    }
     /**
      * @see UserInterface
      */
