@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -74,6 +76,22 @@ class User implements UserInterface
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Outing::class, mappedBy="organizer", orphanRemoval=true)
+     */
+    private $organizedOutings;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Outing::class, mappedBy="participants")
+     */
+    private $participatingOutings;
+
+    public function __construct()
+    {
+        $this->organizedOutings = new ArrayCollection();
+        $this->participatingOutings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -240,6 +258,63 @@ class User implements UserInterface
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Outing[]
+     */
+    public function getOrganizedOutings(): Collection
+    {
+        return $this->organizedOutings;
+    }
+
+    public function addOrganizedOuting(Outing $organizedOuting): self
+    {
+        if (!$this->organizedOutings->contains($organizedOuting)) {
+            $this->organizedOutings[] = $organizedOuting;
+            $organizedOuting->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedOuting(Outing $organizedOuting): self
+    {
+        if ($this->organizedOutings->removeElement($organizedOuting)) {
+            // set the owning side to null (unless already changed)
+            if ($organizedOuting->getOrganizer() === $this) {
+                $organizedOuting->setOrganizer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Outing[]
+     */
+    public function getParticipatingOutings(): Collection
+    {
+        return $this->participatingOutings;
+    }
+
+    public function addParticipatingOuting(Outing $participatingOuting): self
+    {
+        if (!$this->participatingOutings->contains($participatingOuting)) {
+            $this->participatingOutings[] = $participatingOuting;
+            $participatingOuting->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipatingOuting(Outing $participatingOuting): self
+    {
+        if ($this->participatingOutings->removeElement($participatingOuting)) {
+            $participatingOuting->removeParticipant($this);
+        }
 
         return $this;
     }

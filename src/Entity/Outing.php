@@ -56,17 +56,6 @@ class Outing
     private $state;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $organizer;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class)
-     */
-    private $participants;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Location::class, inversedBy="outings")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -77,6 +66,17 @@ class Outing
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organizedOutings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organizer;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="participatingOutings")
+     */
+    private $participants;
 
     public function __construct()
     {
@@ -172,6 +172,30 @@ class Outing
         return $this;
     }
 
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): self
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
     public function getOrganizer(): ?User
     {
         return $this->organizer;
@@ -204,30 +228,6 @@ class Outing
     public function removeParticipant(User $participant): self
     {
         $this->participants->removeElement($participant);
-
-        return $this;
-    }
-
-    public function getLocation(): ?Location
-    {
-        return $this->location;
-    }
-
-    public function setLocation(?Location $location): self
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
-    public function getCampus(): ?Campus
-    {
-        return $this->campus;
-    }
-
-    public function setCampus(?Campus $campus): self
-    {
-        $this->campus = $campus;
 
         return $this;
     }
