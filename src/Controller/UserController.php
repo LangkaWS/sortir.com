@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\MyProfileType;
 use App\Form\RegisterType;
 use App\Security\Authenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,6 +56,25 @@ class UserController extends AbstractController
 
         return $this->render('user/register.html.twig', [
             'registerForm' => $registerForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/profile", name="user_profile")
+     */
+    public function myProfile(Request $request, EntityManagerInterface $em): Response
+    {
+        $user = new User();
+        $profile = $this->createForm(MyProfileType::class, $user);
+        $profile->handleRequest($request);
+
+        if($profile->isSubmitted() && $profile->isValid()){
+                $em->persist($user);
+                $em->flush();
+        }
+        return $this->render('user/myProfile.html.twig', [
+            'controller_name' => 'ManageProfileController',
+            'profile' => $profile->createView(),
         ]);
     }
 }
