@@ -74,3 +74,12 @@
 
 # Phpstorm
 .idea
+
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
+
+# Migrations
+/migrations
+
