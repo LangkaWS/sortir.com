@@ -3,7 +3,18 @@
 {% block title %}Hello MainController!{% endblock %}
 
 {% block main %}
+<div>
+    <p>Date du jour : {{ "now"|date("d/m/Y") }}</p>
+    <p>Participant : {{ app.user.username }}</p>
+</div>
 
+<div>
+    Filtrer les sorties
+</div>
 
+<div>
+    {{ render(controller(
+        'App\\Controller\\OutingController::index'
+    )) }}
 </div>
 {% endblock %}
