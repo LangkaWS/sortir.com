@@ -59,18 +59,44 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/profile", name="user_profile")
-     */
-    public function myProfile(Request $request, EntityManagerInterface $em): Response
+     /**
+      *
+      * @param Request $request
+      * @param EntityManagerInterface $em
+      * @return Response
+      * @Route("/profile", name="user_profile")
+      */
+    public function myProfile(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
     {
-        $user = new User();
+        $user = $this->getUser();        
         $profile = $this->createForm(MyProfileType::class, $user);
         $profile->handleRequest($request);
 
+
+
+        if($user->getIsAdmin() == 0)
+            $user->setIsAdmin(FALSE);
+        
+        elseif($user->getIsAdmin() == 1)
+            $user->setIsAdmin(TRUE);
+
+        if($user->getIsActive()==0)
+            $user->setIsActive(false);
+        elseif($user->getIsActive()==1)
+            $user->setIsActive(true);
+
         if($profile->isSubmitted() && $profile->isValid()){
-                $em->persist($user);
-                $em->flush();
+            $hash = $encoder->encodePassword($user, $user->getPassword());
+            $user->setUsername($user->getPseudo());
+            $user->setLastName($user->getLastName());
+            $user->setFirstName($user->getFirstName());
+            $user->setPhone($user->getPhone());
+            $user->setEmail($user->getEmail());
+            $user->setPassword($hash);
+            $user->setIsAdmin($user->getIsAdmin());
+            $user->setIsActive($user->getIsActive());
+            $user->setCampus($user->getCampus());
+            $em->flush();
         }
         return $this->render('user/myProfile.html.twig', [
             'controller_name' => 'ManageProfileController',

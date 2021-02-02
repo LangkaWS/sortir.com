@@ -29,10 +29,15 @@
     <div class="rows">
         {{ form_row(profile.password) }}
     </div>
+     <div class="rows">
+        {{ form_row(profile.campus) }}
+    </div>
     <div class="button">
         <button type="submit" class="btn btn-primary">Enregistrer</button>
         <button type="reset" class="btn btn-secondary">Effacer</button>
+        <p>{{app.user.campus}}</p>
     </div>
+
     {{ form_end(profile) }}
 </div>
 {% endblock %}
