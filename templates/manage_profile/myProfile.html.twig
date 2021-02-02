@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My profile ! {% endblock %}
+
+{% block body %}
+    <h3>Mon profil</h3>
+    {{ form_start(profile) }}
+    {{ form_widget(profile) }}
+    {{ form_end(profile) }}
+{% endblock %}
