@@ -37,7 +37,7 @@ class Outing
     /**
      * @ORM\Column(type="datetime")
      */
-    private $closingDate;
+    private $registrationDeadLine;
 
     /**
      * @ORM\Column(type="integer")
@@ -124,14 +124,14 @@ class Outing
         return $this;
     }
 
-    public function getClosingDate(): ?\DateTimeInterface
+    public function getRegistrationDeadLine(): ?\DateTimeInterface
     {
-        return $this->closingDate;
+        return $this->registrationDeadLine;
     }
 
-    public function setClosingDate(\DateTimeInterface $closingDate): self
+    public function setRegistrationDeadLine(\DateTimeInterface $registrationDeadLine): self
     {
-        $this->closingDate = $closingDate;
+        $this->registrationDeadLine = $registrationDeadLine;
 
         return $this;
     }
