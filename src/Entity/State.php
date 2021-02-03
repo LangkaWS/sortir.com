@@ -36,6 +36,11 @@ class State
         $this->outings = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->wording;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
