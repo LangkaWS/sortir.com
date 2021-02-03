@@ -91,4 +91,15 @@ class OutingController extends AbstractController
 
         return $this->redirectToRoute('outing_index');
     }
+
+    /**
+     * @Route("/register/{id}", name="outing_register", methods={"POST"})
+     */
+    public function addParticipant(Outing $outing): Response
+    {
+        $outing->addParticipant($this->getUser());
+        $this->getDoctrine()->getManager()->flush();
+        $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
+        return $this->redirectToRoute('app_home');
+    }
 }
