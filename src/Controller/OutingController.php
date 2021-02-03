@@ -48,7 +48,10 @@ class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
 
-            return $this->redirectToRoute('outing_index');
+            $this->addFlash('success', "Votre sortie a bien été créée !");
+            return $this->redirectToRoute('outing_show', [
+                'id' => $outing->getId()
+            ]);
         }
 
         return $this->render('outing/new.html.twig', [
