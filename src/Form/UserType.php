@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+
 class UserType extends AbstractType
 {
     private $security;
@@ -19,10 +20,22 @@ class UserType extends AbstractType
     {
         $this->security = $security;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $data = $this->security->getUser();
         $builder
+        ->add('email', EmailType::class ,[
+            'label' => 'Email : ',
+            'data' => $data->getEmail(),
+            ])
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'required' => false,
+                'first_options'  => ['label' => 'Mot de passe : '],
+                'second_options' => ['label' => 'Confirmation : '],
+            ])
             ->add('username',TextType::class ,[
                 'label' => 'Pseudo : ',
                 'data' => $data->getPseudo()
@@ -39,17 +52,6 @@ class UserType extends AbstractType
                 'label' => 'Téléphone : ',
                 'data' => $data->getPhone(),
                 ])
-            ->add('email', EmailType::class ,[
-                'label' => 'Email : ',
-                'data' => $data->getEmail(),
-                ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
-                'required' => false,
-                'first_options'  => ['label' => 'Mot de passe : '],
-                'second_options' => ['label' => 'Confirmation : '],
-            ])
             ->add('campus')
         ;
     }

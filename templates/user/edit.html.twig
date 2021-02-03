@@ -1,34 +1,38 @@
-{% extends 'base.html.twig' %} 
+{% extends 'base.html.twig' %}
 
-{% block stylesheets %} <link href="{{ asset('css/profile.css')}}" rel="stylesheet"> {% endblock %}
-
-
-{% block title %}My profile ! {% endblock %} 
+{% block title %}Edit User{% endblock %}
 
 {% block main %}
-<div class="profile_wrap">
-    <h3>Mon profil</h3>
-    {{ form_start(profile) }}
-    
-        {{ form_row(profile.username) }}  
-    
-        {{ form_row(profile.lastName) }}
-    
-        {{ form_row(profile.firstName) }}
-    
-        {{ form_row(profile.phone) }}
-    
-        {{ form_row(profile.email) }}
-    
-        {{ form_row(profile.password) }}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+    <h3>Edit User</h3>
 
-        {{ form_row(profile.campus) }}
+    {{ form_start(form) }}
+    
+        {{ form_row(form.username) }}  
+    
+        {{ form_row(form.lastName) }}
+    
+        {{ form_row(form.firstName) }}
+    
+        {{ form_row(form.phone) }}
+    
+        {{ form_row(form.email) }}
+    
+        {{ form_row(form.password) }}
 
-    <div class="button">
+        {{ form_row(form.campus) }}
+
+    <div class="button mt-4">
         <button type="submit" class="btn btn-primary">Enregistrer</button>
         <button type="reset" class="btn btn-secondary">Effacer</button>
     </div>
 
-    {{ form_end(profile) }}
+    {{ form_end(form) }}
 </div>
+
+    {#{{ include('user/_form.html.twig', {'button_label': 'Update'}) }}#}
+
+    <a href="{{ path('user_index') }}">back to list</a>
+
+    {#{{ include('user/_delete_form.html.twig') }}#}
 {% endblock %}
