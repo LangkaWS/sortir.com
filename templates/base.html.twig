@@ -16,6 +16,7 @@
         </header>
 
         <main>
+            
             <div class="banner">
                 {% for message in app.flashes('error') %}
                     <div class="alert alert-error">
@@ -23,6 +24,7 @@
                     </div>
                 {% endfor %}
             </div>
+
             <div class="banner">
                 {% for message in app.flashes('warning') %}
                     <div class="alert alert-warning">
@@ -30,6 +32,7 @@
                     </div>
                 {% endfor %}
             </div>
+
             <div class="banner">
                 {% for message in app.flashes('success') %}
                     <div class="alert alert-success">
@@ -37,6 +40,7 @@
                     </div>
                 {% endfor %}
             </div>
+
             <div class="banner">
                 {% for message in app.flashes('notice') %}
                     <div class="alert alert-notice">
@@ -44,6 +48,7 @@
                     </div>
                 {% endfor %}
             </div>
+
             {% block main %}{% endblock %}
         </main>
 
