@@ -66,7 +66,7 @@ class UserController extends AbstractController
       * @return Response
       * @Route("/profile/{username}/edit", name="user_profile", methods={"GET","POST"})
       */
-    public function myProfile(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
+    public function edit(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->getUser();        
         $form = $this->createForm(UserType::class, $user);
@@ -80,7 +80,7 @@ class UserController extends AbstractController
             $this->addFlash('success', 'La modification du profil à bien été prise en compte.');
             return $this->redirectToRoute("app_home");
         }
-        return $this->render('user/show.html.twig', [
+        return $this->render('user/edit.html.twig', [
             'controller_name' => 'ManageProfileController',
             'profile' => $form->createView(),
         ])
