@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Outing;
 use App\Entity\State;
+use App\Repository\StateRepository;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
-use App\Repository\StateRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,6 +41,7 @@ class OutingController extends AbstractController
         $outing->setCampus($this->getUser()->getCampus());
         $outing->setState($stateRepo->find(1));
 
+        $form = $this->createForm(OutingType::class, $outing);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,15 +49,16 @@ class OutingController extends AbstractController
             $entityManager->persist($outing);
             $entityManager->flush();
 
+
             $this->addFlash('success', "Votre sortie a bien été créée !");
             return $this->redirectToRoute('outing_show', [
                 'id' => $outing->getId()
             ]);
+
         }
 
         return $this->render('outing/new.html.twig', [
             'outing' => $outing,
-
             'form' => $form->createView(),
         ]);
     }

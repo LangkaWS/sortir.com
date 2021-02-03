@@ -20,6 +20,7 @@ class OutingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+
             ->add('outingName', TextType::class, [
                 'label' => 'Intitulé :',
                 'label_attr' => [
@@ -83,6 +84,7 @@ class OutingType extends AbstractType
                     'class' => 'label-custom'
                 ]
             ])
+
         ;
     }
 

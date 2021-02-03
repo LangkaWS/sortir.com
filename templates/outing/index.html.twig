@@ -8,25 +8,26 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>OutingName</th>
-                <th>StartDate</th>
-                <th>Duration</th>
-                <th>RegistrationDeadLine</th>
-                <th>MaxParticipants</th>
-                <th>Description</th>
-                <th>actions</th>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>inscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for outing in outings %}
             <tr>
-                <td>{{ outing.id }}</td>
                 <td>{{ outing.outingName }}</td>
                 <td>{{ outing.startDate ? outing.startDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ outing.duration }}</td>
                 <td>{{ outing.registrationDeadLine ? outing.registrationDeadLine|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ outing.maxParticipants }}</td>
+                <td>{{ outing.participants|length }}/{{ outing.maxParticipants }}</td>
+                <td>{{ outing.state }}</td>
+                <td>A faire</td>
+                <td>{{ outing.organizer.username }}</td>
                 <td>{{ outing.description }}</td>
                 <td>
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
@@ -41,5 +42,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('outing_new') }}">Create new</a>
+    <a class="btn" href="{{ path('outing_new') }}">Create new</a>
 {% endblock %}
