@@ -54,7 +54,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user", name="user_index", methods={"GET"})
+     * @Route("/", name="user_index", methods={"GET"})
      */
     public function index(UserRepository $userRepository): Response
     {

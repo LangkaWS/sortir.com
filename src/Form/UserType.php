@@ -25,32 +25,33 @@ class UserType extends AbstractType
     {
         $data = $this->security->getUser();
         $builder
-        ->add('email', EmailType::class ,[
-            'label' => 'Email : ',
-            'data' => $data->getEmail(),
-            ])
+        
+            ->add('username',TextType::class ,[
+                'label' => 'Pseudo : ',
+                'data' => $data->getPseudo()
+                ])            
+            ->add('firstName', TextType::class ,[
+                'label' => 'Prénom : ',
+                'data' => $data->getFirstName(),
+                ])
+            ->add('lastName', TextType::class ,[
+                'label' => 'Nom : ',
+                'data' => $data->getLastName(),
+                ])
+            ->add('phone', TextType::class,[
+                'label' => 'Téléphone : ',
+                'data' => $data->getPhone(),
+                ])
+            ->add('email', EmailType::class ,[
+                'label' => 'Email : ',
+                'data' => $data->getEmail(),
+                ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
                 'required' => false,
                 'first_options'  => ['label' => 'Mot de passe : '],
                 'second_options' => ['label' => 'Confirmation : '],
-            ])
-            ->add('username',TextType::class ,[
-                'label' => 'Pseudo : ',
-                'data' => $data->getPseudo()
-                ])
-            ->add('lastName', TextType::class ,[
-                'label' => 'Nom : ',
-                'data' => $data->getLastName(),
-                ])
-            ->add('firstName', TextType::class ,[
-                'label' => 'Prénom : ',
-                'data' => $data->getFirstName(),
-                ])
-            ->add('phone', TextType::class,[
-                'label' => 'Téléphone : ',
-                'data' => $data->getPhone(),
                 ])
             ->add('campus')
         ;
