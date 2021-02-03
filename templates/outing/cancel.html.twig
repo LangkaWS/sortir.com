@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Outing{% endblock %}
+
+{% block main %}
+    <h1>Cancel Outing</h1>
+
+    Nom de la sortie : {{ outing.outingName }}
+    Date de la sortie : {{ outing.startDate|date('Y-m-d H:i:s') }}
+    Campus : {{ outing.campus }}
+    Lieu : {{ outing.location }}
+    <form name="outing" method="post">
+        <div id="outing">
+            <div class="form-group">
+                <label class="label-custom required">Motif :</label>
+                <textarea id="outing_cancellationReaction" class="form-control" name="outing[cancellationReason]" required="required"></textarea>
+            </div>
+            <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ outing.id) }}">
+        </div>
+        <button class="btn btn-warning" type="submit">Enregistrer</button>
+    </form>
+
+
+    <a href="{{ path('outing_index') }}">back to list</a>
+{% endblock %}
