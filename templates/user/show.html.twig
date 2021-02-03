@@ -1,41 +1,32 @@
 {% extends 'base.html.twig' %} 
 
+{% block stylesheets %} <link href="{{ asset('css/profile.css')}}" rel="stylesheet"> {% endblock %}
+
+
 {% block title %}My profile ! {% endblock %} 
 
 {% block main %}
 <div class="profile_wrap">
     <h3>Mon profil</h3>
     {{ form_start(profile) }}
-    <div class="rows">
-        {{ form_row(profile.username) }}
-    </div>
-
-    <div class="rows">
+    
+        {{ form_row(profile.username) }}  
+    
         {{ form_row(profile.lastName) }}
-    </div>
-
-    <div class="rows">
+    
         {{ form_row(profile.firstName) }}
-    </div>
-
-    <div class="rows">
+    
         {{ form_row(profile.phone) }}
-    </div>
-
-    <div class="rows">
+    
         {{ form_row(profile.email) }}
-    </div>
-
-    <div class="rows">
+    
         {{ form_row(profile.password) }}
-    </div>
-     <div class="rows">
+
         {{ form_row(profile.campus) }}
-    </div>
+
     <div class="button">
         <button type="submit" class="btn btn-primary">Enregistrer</button>
         <button type="reset" class="btn btn-secondary">Effacer</button>
-        <p>{{app.user.campus}}</p>
     </div>
 
     {{ form_end(profile) }}

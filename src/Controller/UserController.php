@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\MyProfileType;
+use App\Form\UserType;
 use App\Form\RegisterType;
 use App\Security\Authenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -69,41 +69,20 @@ class UserController extends AbstractController
     public function myProfile(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
     {
         $user = $this->getUser();        
-        $profile = $this->createForm(MyProfileType::class, $user);
-        $profile->handleRequest($request);
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
 
-
-        if($user->getIsAdmin() == 0)
-            $user->setIsAdmin(FALSE);
-        
-        elseif($user->getIsAdmin() == 1)
-            $user->setIsAdmin(TRUE);
-
-        if($user->getIsActive()==0)
-            $user->setIsActive(false);
-        elseif($user->getIsActive()==1)
-            $user->setIsActive(true);
-
-        if($profile->isSubmitted() && $profile->isValid()){
-            $hash = $encoder->encodePassword($user, $user->getPassword());
-            $user->setUsername($user->getPseudo());
-            $user->setLastName($user->getLastName());
-            $user->setFirstName($user->getFirstName());
-            $user->setPhone($user->getPhone());
-            $user->setEmail($user->getEmail());
-            $user->setPassword($hash);
-            $user->setIsAdmin($user->getIsAdmin());
-            $user->setIsActive($user->getIsActive());
-            $user->setCampus($user->getCampus());
+        if($form->isSubmitted() && $form->isValid()){
+            
             $em->flush();
 
             $this->addFlash('success', 'La modification du profil à bien été prise en compte.');
             return $this->redirectToRoute("app_home");
         }
-        return $this->render('user/myProfile.html.twig', [
+        return $this->render('user/show.html.twig', [
             'controller_name' => 'ManageProfileController',
-            'profile' => $profile->createView(),
+            'profile' => $form->createView(),
         ])
         ;
     }
