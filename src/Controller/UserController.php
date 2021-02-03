@@ -99,6 +99,7 @@ class UserController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'La modification du profil à bien été prise en compte.');
+            return $this->redirectToRoute("app_home");
         }
         return $this->render('user/myProfile.html.twig', [
             'controller_name' => 'ManageProfileController',
