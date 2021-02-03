@@ -48,13 +48,13 @@ class Authenticator extends AbstractFormLoginAuthenticator implements PasswordAu
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'email' => $request->request->get('email'),
+            'userId' => $request->request->get('userId'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
-            $credentials['email']
+            $credentials['userId']
         );
 
         return $credentials;
@@ -67,7 +67,7 @@ class Authenticator extends AbstractFormLoginAuthenticator implements PasswordAu
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
+        $user = $this->entityManager->getRepository(User::class)->findOneByEmailOrUsername($credentials['userId']);
 
         if (!$user) {
             // fail authentication with a custom error
