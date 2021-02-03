@@ -8,19 +8,7 @@
 
     {{ form_start(form) }}
     
-        {{ form_row(form.username) }}  
-    
-        {{ form_row(form.lastName) }}
-    
-        {{ form_row(form.firstName) }}
-    
-        {{ form_row(form.phone) }}
-    
-        {{ form_row(form.email) }}
-    
-        {{ form_row(form.password) }}
-
-        {{ form_row(form.campus) }}
+    {{ form_widget(form) }}
 
     <div class="button mt-4">
         <button type="submit" class="btn btn-primary">Enregistrer</button>
