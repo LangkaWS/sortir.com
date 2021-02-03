@@ -64,7 +64,7 @@ class UserController extends AbstractController
       * @param Request $request
       * @param EntityManagerInterface $em
       * @return Response
-      * @Route("/profile", name="user_profile")
+      * @Route("/profile/{username}/edit", name="user_profile", methods={"GET","POST"})
       */
     public function myProfile(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
     {
