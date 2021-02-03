@@ -1,0 +1,46 @@
+<div class="form">
+    {% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+    {{ form_start(form) }}
+    <div class="group">
+        {{ form_label(form.outingName) }}
+        {{ form_widget(form.outingName) }}
+        {{ form_errors(form.outingName) }}
+    </div>
+    <div class="group">
+        {{ form_label(form.startDate) }}
+        {{ form_widget(form.startDate) }}
+        {{ form_errors(form.startDate) }}
+    </div>
+    <div class="group">
+        {{ form_label(form.duration) }}
+        {{ form_widget(form.duration) }}
+        {{ form_errors(form.duration) }}
+    </div>
+    <div class="group">
+        {{ form_label(form.registrationDeadLine) }}
+        {{ form_widget(form.registrationDeadLine) }}
+        {{ form_errors(form.registrationDeadLine) }}
+    </div>
+    <div class="group">
+        {{ form_label(form.maxParticipants) }}
+        {{ form_widget(form.maxParticipants) }}
+        {{ form_errors(form.maxParticipants) }}
+    </div>
+    <div class="group">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        {{ form_errors(form.description) }}
+    </div>
+    <div class="group">
+        {{ form_label(form.location) }}
+        {{ form_widget(form.location) }}
+        {{ form_errors(form.location) }}
+    </div>
+
+    <div class="submit-div">
+        <button class="btn btn-primary form-button">{{ button_label|default('Créer') }}</button>
+    </div>
+
+    {{ form_end(form) }}
+</div>
