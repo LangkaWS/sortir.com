@@ -97,10 +97,13 @@ class UserController extends AbstractController
             $user->setIsActive($user->getIsActive());
             $user->setCampus($user->getCampus());
             $em->flush();
+
+            $this->addFlash('success', 'La modification du profil à bien été prise en compte.');
         }
         return $this->render('user/myProfile.html.twig', [
             'controller_name' => 'ManageProfileController',
             'profile' => $profile->createView(),
-        ]);
+        ])
+        ;
     }
 }
