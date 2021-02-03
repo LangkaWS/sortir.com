@@ -6,6 +6,7 @@ use App\Repository\OutingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
@@ -20,6 +21,7 @@ class Outing
     private $id;
 
     /**
+     * @Assert\Length(min=3, max=50, minMessage="Au moins {{ min }} caractères", maxMessage="Maximum 50 caractères")
      * @ORM\Column(type="string", length=50)
      */
     private $outingName;
