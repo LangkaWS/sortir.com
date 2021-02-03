@@ -94,16 +94,27 @@ class OutingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="outing_delete", methods={"DELETE"})
+     * @Route("/{id}/cancel", name="outing_cancel", methods={"GET","POST"})
      */
-    public function delete(Request $request, Outing $outing): Response
+    public function cancel(Request $request, Outing $outing): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$outing->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($outing);
-            $entityManager->flush();
+
+        $stateRepo = $this->getDoctrine()->getRepository(State::class);
+        $form = $this->createForm(OutingType::class, $outing);
+        echo $outing->getOutingName();
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $outing->setState($stateRepo->find(6));
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('outing_index');
         }
 
-        return $this->redirectToRoute('outing_index');
+        return $this->render('outing/cancel.html.twig', [
+            'outing' => $outing,
+            'form' => $form->createView(),
+        ]);
     }
 }
