@@ -35,10 +35,8 @@ class OutingController extends AbstractController
         $stateRepo = $this->getDoctrine()->getRepository(State::class);
 
         $outing = new Outing();
-        $form = $this->createForm(OutingType::class, $outing);
-
-        $outing->setOrganizer($this->getUser());
         $outing->setCampus($this->getUser()->getCampus());
+        $outing->setOrganizer($this->getUser());
         $outing->setState($stateRepo->find(1));
 
         $form = $this->createForm(OutingType::class, $outing);
@@ -48,7 +46,6 @@ class OutingController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($outing);
             $entityManager->flush();
-
 
             $this->addFlash('success', "Votre sortie a bien été créée !");
             return $this->redirectToRoute('outing_show', [
