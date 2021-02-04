@@ -68,8 +68,6 @@ class OutingController extends AbstractController
      */
     public function listLocationsOfTownAction(Request $request)
     {
-        $hello = 'hello';
-        dump($hello);
         $em = $this->getDoctrine()->getManager();
         $locationsRepo = $em->getRepository(Location::class);
 
@@ -78,10 +76,7 @@ class OutingController extends AbstractController
         $locations = $locationsRepo->findByTown($townid);
         
         $responseArray = array();
-        $responseArray[] = $hello;
 
-        $responseArray[] = $locations;
-        
         foreach($locations as $location) {
             $responseArray[] = array(
                 "id" => $location->getId(),
