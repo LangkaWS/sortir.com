@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Outing index{% endblock %}
+
+{% block main %}
+    <h1>Outing index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>inscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for outing in outings %}
+            <tr>
+                <td>{{ outing.outingName }}</td>
+                <td>{{ outing.startDate ? outing.startDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ outing.registrationDeadLine ? outing.registrationDeadLine|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ outing.participants|length }}/{{ outing.maxParticipants }}</td>
+                <td>{{ outing.state }}</td>
+                <td>A faire</td>
+                <td>{{ outing.organizer.username }}</td>
+                <td>{{ outing.description }}</td>
+                <td>
+                    <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
+                    <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn" href="{{ path('outing_new') }}">Create new</a>
+{% endblock %}

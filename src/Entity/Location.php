@@ -55,6 +55,11 @@ class Location
         $this->outings = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function getLocationId(): ?int
     {
         return $this->id;
