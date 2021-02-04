@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Outing;
 use App\Entity\State;
-use App\Repository\StateRepository;
+use App\Entity\Outing;
 use App\Form\OutingType;
+use App\Form\CancelOutingType;
+use App\Repository\StateRepository;
 use App\Repository\OutingRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/outing")
@@ -100,8 +101,7 @@ class OutingController extends AbstractController
     {
 
         $stateRepo = $this->getDoctrine()->getRepository(State::class);
-        $form = $this->createForm(OutingType::class, $outing);
-        echo $outing->getOutingName();
+        $form = $this->createForm(CancelOutingType::class, $outing);
         $form->handleRequest($request);
 
 
@@ -109,7 +109,7 @@ class OutingController extends AbstractController
             $outing->setState($stateRepo->find(6));
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('outing_index');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('outing/cancel.html.twig', [
