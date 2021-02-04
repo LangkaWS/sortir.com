@@ -20,15 +20,35 @@
     $town.change(function() {
         // ... retrieve the corresponding form.
         var $form = $(this).closest('form');
+        var $townSelector = $(this);
+
         // Simulate form data, but only include the selected town value.
         var data = {};
         data[$town.attr('name')] = $town.val();
+
         // Submit data via AJAX to the form's action path.
         $.ajax({
-            url : $form.attr('action'),
-            type: $form.attr('method'),
-            data : data,
-            success: function(html) {
+            url : "{{ path('outing_list_locations') }}",
+            type: "GET",
+            data : {
+                "townid": $town.val()
+            },
+            success: function (locations) {
+                console.log(locations);
+                var locationsSelect = $('#outing_location');
+
+                locationsSelect.html = '';
+
+                locationsSelect.append('<option value> Select a location </option>');
+
+                $.each(locations, function(key, location) {
+                    locationsSelect.append('<option value="' + location.id + '">' + location.name + '</option>');
+                });
+            },
+            error: function(err) {
+                alert('An error occurred');
+            }
+            /* success: function(html) {
                 // Replace current position field ...
                 $('#outing_location').replaceWith(
                     // ... with the returned one from the AJAX response.
@@ -36,7 +56,7 @@
                 );
                 console.log($('#outing_location').val());
                 // Position field now displays the appropriate positions.
-            }
+            } */
         });
     });
 </script>

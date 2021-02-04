@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Location;
 use App\Entity\Outing;
 use App\Entity\State;
 use App\Repository\StateRepository;
 use App\Form\OutingType;
 use App\Repository\OutingRepository;
+use App\Repository\LocationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,6 +61,35 @@ class OutingController extends AbstractController
             'outing' => $outing,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/get-locations-from-town", name="outing_list_locations")
+     */
+    public function listLocationsOfTownAction(Request $request)
+    {
+        $hello = 'hello';
+        dump($hello);
+        $em = $this->getDoctrine()->getManager();
+        $locationsRepo = $em->getRepository(Location::class);
+
+        $townid = $request->get('townid');
+        
+        $locations = $locationsRepo->findByTown($townid);
+        
+        $responseArray = array();
+        $responseArray[] = $hello;
+
+        $responseArray[] = $locations;
+        
+        foreach($locations as $location) {
+            $responseArray[] = array(
+                "id" => $location->getId(),
+                "name" => $location->getName()
+            );
+        }
+
+        return new JsonResponse($responseArray);
     }
 
     /**

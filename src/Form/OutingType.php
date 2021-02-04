@@ -2,26 +2,42 @@
 
 namespace App\Form;
 
-use App\Entity\Campus;
-use App\Entity\Location;
-use App\Entity\Outing;
 use App\Entity\Town;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+use App\Entity\Campus;
+use App\Entity\Outing;
+use App\Entity\Location;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class OutingType extends AbstractType
 {
+
+    private $em;
+    
+    /**
+     * The Type requires the EntityManager as argument in the constructor. It is autowired
+     * in Symfony 3.
+     * 
+     * @param EntityManagerInterface $em
+     */
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -69,7 +85,11 @@ class OutingType extends AbstractType
             ])
         ;
 
-        $formModifier = function(FormInterface $form, Town $town = null){
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+
+        /* $formModifier = function(FormInterface $form, Town $town = null){
+            dump($town);
             $locations = $town === null ? [] : $town->getLocations();
 
             $form->add('location', EntityType::class, [
@@ -109,8 +129,62 @@ class OutingType extends AbstractType
               $town = $event->getForm()->getData();
               $formModifier($event->getForm()->getParent(), $town);
           }
-        );
-     }
+        ); */
+    }
+
+    protected function addElements(FormInterface $form, Town $town = null) {
+        // 4. Add the province element
+        $form->add('town', EntityType::class, array(
+            'required' => true,
+            'class' => Town::class,
+            'mapped' => false,
+            'label' => 'Ville :',
+            'choice_label' => function($choice){ return $choice->getName();},
+        ));
+        
+        // Neighborhoods empty, unless there is a selected City (Edit View)
+        $location = array();
+        
+        // If there is a city stored in the Person entity, load the neighborhoods of it
+        if ($town) {
+            // Fetch Neighborhoods of the City if there's a selected city
+            $locationRepo = $this->em->getRepository(Location::class);
+            
+            /* $location = $locationRepo->createQueryBuilder("q")
+                ->where("q.town = :townid")
+                ->setParameter("townid", $town->getId())
+                ->getQuery()
+                ->getResult(); */
+        }
+        
+        // Add the Neighborhoods field with the properly data
+        $form->add('location', EntityType::class, array(
+            'required' => true,
+            'placeholder' => 'Select a City first ...',
+            'class' => Location::class,
+            'choices' => $location
+        ));
+    }
+
+    function onPreSubmit(FormEvent $event) {
+        $form = $event->getForm();
+        $data = $event->getData();
+        
+        // Search for selected City and convert it into an Entity
+        $town = $this->em->getRepository(Town::class)->find($data['town']);
+        
+        $this->addElements($form, $town);
+    }
+
+    function onPreSetData(FormEvent $event) {
+        $outing = $event->getData();
+        $form = $event->getForm();
+
+        // When you create a new person, the City is always empty
+        $town = $outing->getLocation() ? $outing->getLocation()->getTown() : null;
+        
+        $this->addElements($form, $town);
+    }
 
     public function configureOptions(OptionsResolver $resolver)
     {

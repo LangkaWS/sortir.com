@@ -39,7 +39,7 @@ class Town
         $this->locations = new ArrayCollection();
     }
 
-    public function getTownId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
