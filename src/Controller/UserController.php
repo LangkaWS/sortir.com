@@ -109,8 +109,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashed = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hashed);
+            if(!empty($user->getPlainPassword())){   
+                $password = $encoder->encodePassword($user, $user->getPlainPassword());
+                $user->setPassword($password);
+            }
+            
             $this->getDoctrine()->getManager()->flush();         
 
             $this->addFlash('success', 'La modification du profil à bien été prise en compte.');
