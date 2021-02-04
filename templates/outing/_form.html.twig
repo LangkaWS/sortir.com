@@ -18,13 +18,6 @@
     console.log($town.val());
     // When town gets selected ...
     $town.change(function() {
-        // ... retrieve the corresponding form.
-        var $form = $(this).closest('form');
-        var $townSelector = $(this);
-
-        // Simulate form data, but only include the selected town value.
-        var data = {};
-        data[$town.attr('name')] = $town.val();
 
         // Submit data via AJAX to the form's action path.
         $.ajax({
@@ -34,13 +27,9 @@
                 "townid": $town.val()
             },
             success: function (locations) {
-                console.log(locations);
                 var locationsSelect = $('#outing_location');
-
-                locationsSelect.html = '';
-
-                locationsSelect.append('<option value> Select a location </option>');
-
+                locationsSelect.empty();
+                locationsSelect.append('<option value>Choisissez votre lieu</option>')
                 $.each(locations, function(key, location) {
                     locationsSelect.append('<option value="' + location.id + '">' + location.name + '</option>');
                 });
@@ -48,15 +37,6 @@
             error: function(err) {
                 alert('An error occurred');
             }
-            /* success: function(html) {
-                // Replace current position field ...
-                $('#outing_location').replaceWith(
-                    // ... with the returned one from the AJAX response.
-                    $(html).find('#outing_location')
-                );
-                console.log($('#outing_location').val());
-                // Position field now displays the appropriate positions.
-            } */
         });
     });
 </script>
