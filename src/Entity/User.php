@@ -124,12 +124,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
-    }
-
-    public function getPseudo(): string
-    {
-        return (String) $this->username;
+        return (string) $this->username;
     }
     /**
      * @see UserInterface

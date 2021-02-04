@@ -28,7 +28,7 @@ class UserType extends AbstractType
         
             ->add('username',TextType::class ,[
                 'label' => 'Pseudo : ',
-                'data' => $data->getPseudo()
+                'data' => $data->getUsername()
                 ])            
             ->add('firstName', TextType::class ,[
                 'label' => 'Prénom : ',
