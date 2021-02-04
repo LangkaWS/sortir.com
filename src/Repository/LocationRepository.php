@@ -48,13 +48,13 @@ class LocationRepository extends ServiceEntityRepository
     }
     */
 
-    public function findByTown($townid): ?Location
+    public function findByTown($townid)
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.town = :townid')
             ->setParameter('townid', $townid)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 }
