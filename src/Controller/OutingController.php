@@ -70,10 +70,10 @@ class OutingController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $locationsRepo = $em->getRepository(Location::class);
-        $townid = $request->get('townid');
+        $townid = $request->query->get('townid');
         
         $locations = $locationsRepo->findByTown($townid);
-        
+
         $responseArray = array();
 
         foreach($locations as $location) {
