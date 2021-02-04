@@ -16,7 +16,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -77,90 +76,31 @@ class OutingType extends AbstractType
                 'class' => Campus::class,
                 'disabled' => true
             ])
-            ->add('town', EntityType::class, [
-                'class' => Town::class,
-                'mapped' => false,
-                'label' => 'Ville :',
-                'choice_label' => function($choice){ return $choice->getName();},
-            ])
+
         ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
         $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
 
-        /* $formModifier = function(FormInterface $form, Town $town = null){
-            dump($town);
-            $locations = $town === null ? [] : $town->getLocations();
-
-            $form->add('location', EntityType::class, [
-                'class' => Location::class,
-                'placeholder' => '',
-                'choices' => $locations
-            ]);
-        };
-
-        $builder->addEventListener(
-          FormEvents::PRE_SET_DATA,
-          function (FormEvent $event) use ($formModifier) {
-              $outing = $event->getData();
-              dump($outing);
-              if ($outing->getLocation() !== null) {
-                  $town = $outing->getLocation()->getTown();
-              }
-              if(isset($town)){
-                  $formModifier($event->getForm(), $town);
-              } else {
-                  $formModifier($event->getForm());
-              }
-          }
-        );
-
-        $builder->addEventListener(
-            FormEvents::POST_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
-                $outing = $event->getData();
-                dump($outing);
-            }
-        );
-
-        $builder->get('town')->addEventListener(
-          FormEvents::POST_SUBMIT,
-          function (FormEvent $event) use ($formModifier){
-              $town = $event->getForm()->getData();
-              $formModifier($event->getForm()->getParent(), $town);
-          }
-        ); */
     }
 
     protected function addElements(FormInterface $form, Town $town = null) {
-        // 4. Add the province element
+        // 4. Add the town element
         $form->add('town', EntityType::class, array(
             'required' => true,
             'class' => Town::class,
+            'required' => false,
+            'placeholder' => 'Choisissez une ville',
             'mapped' => false,
             'label' => 'Ville :',
             'choice_label' => function($choice){ return $choice->getName();},
         ));
-        
-        // Neighborhoods empty, unless there is a selected City (Edit View)
+
         $location = array();
-        
-        // If there is a city stored in the Person entity, load the neighborhoods of it
-        if ($town) {
-            // Fetch Neighborhoods of the City if there's a selected city
-            $locationRepo = $this->em->getRepository(Location::class);
-            
-            /* $location = $locationRepo->createQueryBuilder("q")
-                ->where("q.town = :townid")
-                ->setParameter("townid", $town->getId())
-                ->getQuery()
-                ->getResult(); */
-        }
-        
-        // Add the Neighborhoods field with the properly data
+
         $form->add('location', EntityType::class, array(
             'required' => true,
-            'placeholder' => 'Select a City first ...',
+            'placeholder' => 'Choisissez d\'abord la ville ...',
             'class' => Location::class,
             'choices' => $location
         ));
@@ -180,7 +120,7 @@ class OutingType extends AbstractType
         $outing = $event->getData();
         $form = $event->getForm();
 
-        // When you create a new person, the City is always empty
+        // When you create a new person, the town is always empty
         $town = $outing->getLocation() ? $outing->getLocation()->getTown() : null;
         
         $this->addElements($form, $town);
