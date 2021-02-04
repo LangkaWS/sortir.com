@@ -1,5 +1,42 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.outingName) }}
+    {{ form_row(form.startDate) }}
+    {{ form_row(form.duration) }}
+    {{ form_row(form.registrationDeadLine) }}
+    {{ form_row(form.maxParticipants) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.campus) }}
+    {{ form_row(form.town) }}
+    {{ form_row(form.location) }}
+
     <button class="btn btn-primary">{{ button_label|default('Créer') }}</button>
 {{ form_end(form) }}
+
+<script>
+    var $town = $('#outing_town');
+    console.log($town.val());
+    // When town gets selected ...
+    $town.change(function() {
+        // ... retrieve the corresponding form.
+        var $form = $(this).closest('form');
+        // Simulate form data, but only include the selected town value.
+        var data = {};
+        data[$town.attr('name')] = $town.val();
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url : $form.attr('action'),
+            type: $form.attr('method'),
+            data : data,
+            success: function(html) {
+                // Replace current position field ...
+                $('#outing_location').replaceWith(
+                    // ... with the returned one from the AJAX response.
+                    $(html).find('#outing_location')
+                );
+                console.log($('#outing_location').val());
+                // Position field now displays the appropriate positions.
+            }
+        });
+    });
+</script>
