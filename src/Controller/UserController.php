@@ -101,13 +101,17 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserPasswordEncoderInterface $encoder): Response
     {
+        if($user->getEmail() != $this->getUser()->getEmail()){
+            return $this->redirectToRoute('app_home');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $hashed = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashed);
-            $this->getDoctrine()->getManager()->flush();
+            $this->getDoctrine()->getManager()->flush();         
 
             $this->addFlash('success', 'La modification du profil à bien été prise en compte.');
             return $this->redirectToRoute('app_home');
