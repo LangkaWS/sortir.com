@@ -40,6 +40,7 @@ class UserType extends AbstractType
                 ])
             ->add('phone', TextType::class,[
                 'label' => 'Téléphone : ',
+                'required' => false,
                 'data' => $data->getPhone(),
                 ])
             ->add('email', EmailType::class ,[
