@@ -6,18 +6,7 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
     <h3>Edit User</h3>
 
-    {{ form_start(form) }}
-    
-    {{ form_widget(form) }}
-
-    <div class="button mt-4">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <button type="reset" class="btn btn-secondary">Effacer</button>
-    </div>
-
-    {{ form_end(form) }}
-
-    {#{{ include('user/_form.html.twig', {'button_label': 'Update'}) }}#}
+    {{ include('user/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
 
     {#<a href="{{ path('user_index') }}">back to list</a>#}
 
