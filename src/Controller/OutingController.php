@@ -35,15 +35,26 @@ class OutingController extends AbstractController
     {
         $stateRepo = $this->getDoctrine()->getRepository(State::class);
 
+        $campus = $this->getUser()->getCampus();
+        $organizer = $this->getUser();
+
         $outing = new Outing();
-        $outing->setCampus($this->getUser()->getCampus());
         $outing->setOrganizer($this->getUser());
         $outing->setState($stateRepo->find(1));
+        $outing->setCampus($campus);
+        //dump($request->request->get('outing'));
+        $form = $this->createForm(OutingType::class, $outing, [
+            'campus' => $campus,
+            'campusShown' => $campus,
+            'organizer' => $organizer
+        ]);
 
-        $form = $this->createForm(OutingType::class, $outing);
         $form->handleRequest($request);
-
+        //dump($form);
+        //dump($outing);
+        //die();
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($outing);
             $entityManager->flush();
@@ -57,7 +68,7 @@ class OutingController extends AbstractController
 
         return $this->render('outing/new.html.twig', [
             'outing' => $outing,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 

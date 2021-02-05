@@ -6,6 +6,8 @@ use App\Entity\Town;
 use App\Entity\Campus;
 use App\Entity\Outing;
 use App\Entity\Location;
+use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -47,6 +50,11 @@ class OutingType extends AbstractType
                     'placeholder' => 'Ma super sortie'
                 ],
             ])
+            /*
+            ->add('organizer', HiddenType::class, [
+                'data' => $options['organizer']
+            ])
+            */
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Date de la sortie :',
                 'date_widget' => 'single_text',
@@ -71,12 +79,22 @@ class OutingType extends AbstractType
                     'placeholder' => 'Mes super activités'
                 ],
             ])
-            ->add('campus', EntityType::class, [
+            ->add('campusShown', TextType::class, [
                 'label' => 'Campus d\'origine :',
-                'class' => Campus::class,
-                'disabled' => true
+                'disabled' => true,
+                'mapped' => false,
+                'data' => $options['campusShown']->getName()
+            ])
+            /*
+            ->add('campus', HiddenType::class, [
+                'data' => $options['campus']
             ])
 
+            ->add('location', EntityType::class, array(
+                'required' => true,
+                'class' => Location::class
+            ));
+*/
         ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
@@ -87,7 +105,6 @@ class OutingType extends AbstractType
     protected function addElements(FormInterface $form, Town $town = null) {
         // 4. Add the town element
         $form->add('town', EntityType::class, array(
-            'required' => true,
             'class' => Town::class,
             'required' => false,
             'placeholder' => 'Choisissez une ville',
@@ -131,6 +148,9 @@ class OutingType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Outing::class,
         ]);
+        $resolver->setRequired('campus');
+        $resolver->setRequired('campusShown');
+        $resolver->setRequired('organizer');
 
     }
 

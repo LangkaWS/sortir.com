@@ -1,12 +1,14 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form_start(form) }}
     {{ form_row(form.outingName) }}
+    {#  {{ form_row(form.organizer) }} #}
     {{ form_row(form.startDate) }}
     {{ form_row(form.duration) }}
     {{ form_row(form.registrationDeadLine) }}
     {{ form_row(form.maxParticipants) }}
     {{ form_row(form.description) }}
-    {{ form_row(form.campus) }}
+    {{ form_row(form.campusShown) }}
+    {# {{ form_row(form.campus) }} #}
     {{ form_row(form.town) }}
     {{ form_row(form.location) }}
 
@@ -31,6 +33,7 @@
                 locationsSelect.empty();
                 locationsSelect.append('<option value>Choisissez votre lieu</option>')
                 $.each(locations, function(key, location) {
+                    console.log(location);
                     locationsSelect.append('<option value="' + location.id + '">' + location.name + '</option>');
                 });
             },
