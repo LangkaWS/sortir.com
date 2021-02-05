@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\Outing;
 use App\Entity\State;
-use App\Repository\StateRepository;
+use App\Entity\Outing;
 use App\Form\OutingType;
+use App\Form\CancelOutingType;
+use App\Repository\StateRepository;
 use App\Repository\OutingRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/outing")
@@ -94,17 +95,27 @@ class OutingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="outing_delete", methods={"DELETE"})
+     * @Route("/{id}/cancel", name="outing_cancel", methods={"GET","POST"})
      */
-    public function delete(Request $request, Outing $outing): Response
+    public function cancel(Request $request, Outing $outing): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$outing->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($outing);
-            $entityManager->flush();
+
+        $stateRepo = $this->getDoctrine()->getRepository(State::class);
+        $form = $this->createForm(CancelOutingType::class, $outing);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $outing->setState($stateRepo->find(6));
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('app_home');
         }
 
-        return $this->redirectToRoute('outing_index');
+        return $this->render('outing/cancel.html.twig', [
+            'outing' => $outing,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**

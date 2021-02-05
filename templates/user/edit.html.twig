@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block main %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+    <h3>Edit User</h3>
+
+    {{ include('user/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+
+    {#<a href="{{ path('user_index') }}">back to list</a>#}
+
+    {#{{ include('user/_delete_form.html.twig') }}#}
+{% endblock %}

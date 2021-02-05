@@ -42,5 +42,5 @@
 
     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
 
-    {{ include('outing/_delete_form.html.twig') }}
+    <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler la sortie</a>
 {% endblock %}
