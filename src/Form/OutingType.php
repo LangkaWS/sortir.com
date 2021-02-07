@@ -50,11 +50,6 @@ class OutingType extends AbstractType
                     'placeholder' => 'Ma super sortie'
                 ],
             ])
-            /*
-            ->add('organizer', HiddenType::class, [
-                'data' => $options['organizer']
-            ])
-            */
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Date de la sortie :',
                 'date_widget' => 'single_text',
@@ -85,16 +80,6 @@ class OutingType extends AbstractType
                 'mapped' => false,
                 'data' => $options['campusShown']->getName()
             ])
-            /*
-            ->add('campus', HiddenType::class, [
-                'data' => $options['campus']
-            ])
-
-            ->add('location', EntityType::class, array(
-                'required' => true,
-                'class' => Location::class
-            ));
-*/
         ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
@@ -109,18 +94,32 @@ class OutingType extends AbstractType
             'required' => false,
             'placeholder' => 'Choisissez une ville',
             'mapped' => false,
-            'label' => 'Ville :',
-            'choice_label' => function($choice){ return $choice->getName();},
+            'label' => 'Ville :'
         ));
-
-        $location = array();
 
         $form->add('location', EntityType::class, array(
             'required' => true,
-            'placeholder' => 'Choisissez d\'abord la ville ...',
+            'placeholder' => 'Choisissez la ville ...',
             'class' => Location::class,
-            'choices' => $location
+            'label' => "Lieu : "
         ));
+
+        $form->add('adress', TextType::class, [
+            'label' => 'Adresse :',
+            'disabled' => true,
+            'mapped' => false
+        ]);
+        $form->add('longitude', TextType::class, [
+            'label' => 'Longitude :',
+            'disabled' => true,
+            'mapped' => false
+        ]);
+        $form->add('latitude', TextType::class, [
+            'label' => 'Latitude :',
+            'disabled' => true,
+            'mapped' => false
+        ]);
+
     }
 
     function onPreSubmit(FormEvent $event) {
@@ -148,9 +147,7 @@ class OutingType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Outing::class,
         ]);
-        $resolver->setRequired('campus');
         $resolver->setRequired('campusShown');
-        $resolver->setRequired('organizer');
 
     }
 
