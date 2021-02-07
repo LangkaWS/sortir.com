@@ -35,24 +35,19 @@ class OutingController extends AbstractController
     {
         $stateRepo = $this->getDoctrine()->getRepository(State::class);
 
-        $campus = $this->getUser()->getCampus();
         $organizer = $this->getUser();
+        $campus = $organizer->getCampus();
+
 
         $outing = new Outing();
-        $outing->setOrganizer($this->getUser());
+        $outing->setOrganizer($organizer);
         $outing->setState($stateRepo->find(1));
         $outing->setCampus($campus);
-        //dump($request->request->get('outing'));
         $form = $this->createForm(OutingType::class, $outing, [
-            'campus' => $campus,
-            'campusShown' => $campus,
-            'organizer' => $organizer
+            'campusShown' => $campus
         ]);
 
         $form->handleRequest($request);
-        //dump($form);
-        //dump($outing);
-        //die();
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -92,6 +87,27 @@ class OutingController extends AbstractController
             );
         }
 
+        return new JsonResponse($responseArray);
+    }
+
+    /**
+     * @Route("/get-location-informations", name="outing_location_informations")
+     */
+    public function locationInformations(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $locationsRepo = $em->getRepository(Location::class);
+        $locationId = $request->query->get('locationId');
+        $responseArray = array();
+        $responseArray['adress'] = '';
+        $responseArray['latitude'] = '';
+        $responseArray['longitude'] = '';
+        $location = $locationsRepo->find($locationId);
+        if ($locationId) {
+            $responseArray['adress'] = $location->getAdress();
+            $responseArray['latitude'] = $location->getLatitude();
+            $responseArray['longitude'] = $location->getLongitude();
+        }
         return new JsonResponse($responseArray);
     }
 
