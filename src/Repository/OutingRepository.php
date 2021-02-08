@@ -47,4 +47,16 @@ class OutingRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findWithFilter()
+    {
+        $qb = $this->createQueryBuilder('o');
+
+        $qb->andWhere('o.campus = :val')
+        ->setParameter('val', 1);
+
+
+        return $qb->getQuery()->getResult()
+        ;
+    }
 }
