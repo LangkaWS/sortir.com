@@ -9,8 +9,22 @@
     Date de la sortie : {{ outing.startDate|date('Y-m-d H:i:s') }}
     Campus : {{ outing.campus }}
     Lieu : {{ outing.location }}
-    {{ include('outing/_form.html.twig', {'button_label': 'Cancel'}) }}
+    {{ include(
+        'outing/_form.html.twig', {
+            'primary_button_label': 'Cancel',
+            'primary_value': '',
+            'primary_name': '',
+            'secondary_button_label': 'Null',
+            'secondary_value': '',
+            'secondary_name': '',
+            'secondary_class': 'unused-button'
+        })
+    }}
 
 
     <a href="{{ path('outing_index') }}">back to list</a>
+
+    <script>
+        $('.unused-button').remove();
+    </script>
 {% endblock %}
