@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Constraints\Json;
 
 /**
  * @Route("/outing")
@@ -26,6 +28,26 @@ class OutingController extends AbstractController
         return $this->render('outing/index.html.twig', [
             'outings' => $outingRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/filter", name="outing_filter")
+     */
+    public function filter(Request $request)
+    {
+        dump('hello');
+        $em = $this->getDoctrine()->getManager();
+        $outingRepo = $em->getRepository(Outing::class);
+
+        $outings = $outingRepo->findWithFilter();
+        $responseArray = array();
+
+        foreach($outings as $o) {
+            $responseArray[] = $o;
+        }
+        dump($responseArray);
+
+        return new JsonResponse($responseArray);
     }
 
     /**
