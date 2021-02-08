@@ -44,7 +44,7 @@ class OutingController extends AbstractController
         $outing->setOrganizer($organizer);
         $outing->setCampus($campus);
         $form = $this->createForm(OutingType::class, $outing, [
-            'campusShown' => $campus
+            'campus' => $campus
         ]);
         $request->request->get('create') == 'create'
             ? $outing->setState($stateRepo->find(1))
@@ -66,7 +66,8 @@ class OutingController extends AbstractController
 
         return $this->render('outing/new.html.twig', [
             'outing' => $outing,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'action' => 'new'
         ]);
     }
 
@@ -129,7 +130,14 @@ class OutingController extends AbstractController
      */
     public function edit(Request $request, Outing $outing): Response
     {
-        $form = $this->createForm(OutingType::class, $outing);
+        $organizer = $this->getUser();
+        $campus = $organizer->getCampus();
+
+        $outing->setOrganizer($organizer);
+        $outing->setCampus($campus);
+        $form = $this->createForm(OutingType::class, $outing, [
+            'campus' => $campus
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -141,6 +149,7 @@ class OutingController extends AbstractController
         return $this->render('outing/edit.html.twig', [
             'outing' => $outing,
             'form' => $form->createView(),
+            'action' => 'edit'
         ]);
     }
 
@@ -165,6 +174,7 @@ class OutingController extends AbstractController
         return $this->render('outing/cancel.html.twig', [
             'outing' => $outing,
             'form' => $form->createView(),
+            'action' => 'cancel'
         ]);
     }
 
