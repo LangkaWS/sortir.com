@@ -28,6 +28,8 @@ class Outing
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThan("today", message="La date ne peut pas être passée.")
+     * @Assert\GreaterThan (propertyPath="registrationDeadLine", message="La date doit être postérieure à la clôture des inscriptions.")
      */
     private $startDate;
 
