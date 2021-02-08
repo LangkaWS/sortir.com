@@ -1,13 +1,13 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form_start(form) }}
     {{ form_widget(form) }}
-<!--
-    <button class="btn btn-primary" value="create" name="create">{{ button_label|default('Créer') }}</button>
-    <button class="btn btn-secondary" value="publish" name="create">{{ button_label|default('Publier') }}</button>
--->
-
-<button class="btn btn-primary" value="{{ primary_value }}" name="{{ primary_name }}">{{ primary_button_label|default('Ajouter') }}</button>
-<button class="btn btn-secondary {{ secondary_class }}" value="{{ secondary_value }}" name="{{ secondary_name }}">{{ secondary_button_label|default('Supprimer') }}</button>
-
+    {% if action == 'new' %}
+        <button class="btn btn-primary" value="create" name="create">Créer</button>
+        <button class="btn btn-secondary" value="publish" name="create">Publier</button>
+    {% elseif action == 'cancel' %}
+        <button class="btn btn-danger">Cancel</button>
+    {% elseif action == 'edit' %}
+        <button class="btn btn-primary">Edit</button>
+    {% endif %}
 
 {{ form_end(form) }}
