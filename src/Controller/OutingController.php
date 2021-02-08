@@ -38,16 +38,17 @@ class OutingController extends AbstractController
         $organizer = $this->getUser();
         $campus = $organizer->getCampus();
 
-
         $outing = new Outing();
         $outing->setOrganizer($organizer);
-        $outing->setState($stateRepo->find(1));
         $outing->setCampus($campus);
         $form = $this->createForm(OutingType::class, $outing, [
             'campusShown' => $campus
         ]);
-
+        $request->request->get('create') == 'create'
+            ? $outing->setState($stateRepo->find(1))
+            : $outing->setState($stateRepo->find(2));
         $form->handleRequest($request);
+        
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
