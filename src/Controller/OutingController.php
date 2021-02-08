@@ -24,7 +24,7 @@ class OutingController extends AbstractController
     public function index(OutingRepository $outingRepository): Response
     {
         return $this->render('outing/index.html.twig', [
-            'outings' => $outingRepository->findAll(),
+            'outings' => $outingRepository->findByNotArchived(3),
         ]);
     }
 
