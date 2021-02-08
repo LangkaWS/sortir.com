@@ -43,4 +43,21 @@
     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
 
     <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler la sortie</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for participant in outing.participants %}
+        <tr>
+            <td><a href="{{path('user_show', {'username': participant.username})}}">{{participant.username}}</a></td>
+            <td>{{participant.firstName}} {{participant.lastName}}<td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
