@@ -26,7 +26,7 @@ class OutingController extends AbstractController
     public function index(OutingRepository $outingRepository): Response
     {
         return $this->render('outing/index.html.twig', [
-            'outings' => $outingRepository->findByNotArchived(3),
+            'outings' => $outingRepository->findByNotArchived(1),
         ]);
     }
 
@@ -71,7 +71,7 @@ class OutingController extends AbstractController
      */
     public function show(Outing $outing): Response
     {
-        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P3M"))) {
+        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
             $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
             return $this->redirectToRoute('app_home');
         }
@@ -95,7 +95,7 @@ class OutingController extends AbstractController
             return $this->redirectToRoute('outing_index');
         }
 
-        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P3M"))) {
+        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
             $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
             return $this->redirectToRoute('app_home');
         }
@@ -124,7 +124,7 @@ class OutingController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P3M"))) {
+        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
             $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
             return $this->redirectToRoute('app_home');
         }
