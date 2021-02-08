@@ -71,11 +71,11 @@ class OutingType extends AbstractType
                     'placeholder' => 'Mes super activités'
                 ],
             ])
-            ->add('campusShown', TextType::class, [
+            ->add('campus', TextType::class, [
                 'label' => 'Campus d\'origine :',
                 'disabled' => true,
                 'mapped' => false,
-                'data' => $options['campusShown']->getName()
+                'data' => $options['campus']->getName()
             ])
         ;
 
@@ -88,7 +88,7 @@ class OutingType extends AbstractType
         // 4. Add the town element
         $form->add('town', EntityType::class, array(
             'class' => Town::class,
-            'required' => false,
+            'required' => true,
             'placeholder' => 'Choisissez une ville',
             'mapped' => false,
             'label' => 'Ville :'
@@ -144,7 +144,7 @@ class OutingType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Outing::class,
         ]);
-        $resolver->setRequired('campusShown');
+        $resolver->setRequired('campus');
 
     }
 
