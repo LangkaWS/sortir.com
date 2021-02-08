@@ -23,7 +23,7 @@
                 <td>{{ outing.participants|length }}/{{ outing.maxParticipants }}</td>
                 <td>{{ outing.state }}</td>
                 <td>A faire</td>
-                <td>{{ outing.organizer.username }}</td>
+                <td><a href="{{path('user_show', {'username': outing.organizer.username})}}">{{ outing.organizer.username }}</a></td>
                 <td>{{ outing.description }}</td>
                 <td>
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
