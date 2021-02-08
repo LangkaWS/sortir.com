@@ -10,6 +10,10 @@
 
 <div>
     Filtrer les sorties
+    <form id="filter">
+        <input id="word" type="text">
+        <button id='search' type='submit'>Rechercher</button>
+    </form>
 </div>
 
 <div>
@@ -17,4 +21,26 @@
         'App\\Controller\\OutingController::index'
     )) }}
 </div>
+
+<script>
+    console.log('vtff');
+        $(document).on('submit', 'form', () => {
+            console.log('form submitted');
+            $.ajax({
+                url: "/outing/filter", //tried with {{ path('outing_filter') }}, doesn't work
+                type: "get",
+                data: {
+                    "text": $('#word').val()
+                },
+                success: (outings) => {
+                    console.log(outings);
+                },
+                //error: (err) => console.log(err)
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    
 {% endblock %}
