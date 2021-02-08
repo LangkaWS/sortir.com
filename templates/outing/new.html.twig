@@ -5,17 +5,7 @@
 {% block main %}
     <h1 class="main-title">Créer une sortie</h1>
 
-    {{ include(
-        'outing/_form.html.twig', {
-            'primary_button_label': 'Créer',
-            'primary_value': 'create',
-            'primary_name': 'create',
-            'secondary_button_label': 'Publier',
-            'secondary_value': 'publish',
-            'secondary_name': 'create',
-            'secondary_class': ''
-        },
-    )}}
+    {{ include('outing/_form.html.twig')}}
 
     <a href="{{ path('outing_index') }}">back to list</a>
 
