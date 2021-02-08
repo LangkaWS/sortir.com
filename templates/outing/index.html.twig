@@ -1,7 +1,3 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Outing index{% endblock %}
-
 {% block main %}
     <h1>Outing index</h1>
 
@@ -32,6 +28,7 @@
                 <td>
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
+                    {{ include('outing/_register_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

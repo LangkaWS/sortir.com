@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Outing{% endblock %}
+
+{% block main %}
+    <h1>Cancel Outing</h1>
+
+    Nom de la sortie : {{ outing.outingName }}
+    Date de la sortie : {{ outing.startDate|date('Y-m-d H:i:s') }}
+    Campus : {{ outing.campus }}
+    Lieu : {{ outing.location }}
+    {{ include('outing/_form.html.twig', {'button_label': 'Cancel'}) }}
+
+
+    <a href="{{ path('outing_index') }}">back to list</a>
+{% endblock %}

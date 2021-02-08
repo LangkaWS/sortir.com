@@ -6,6 +6,8 @@ use App\Entity\Location;
 use App\Entity\Outing;
 use App\Entity\State;
 use App\Form\OutingType;
+use App\Form\CancelOutingType;
+use App\Repository\StateRepository;
 use App\Repository\OutingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -143,16 +145,37 @@ class OutingController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="outing_delete", methods={"DELETE"})
+     * @Route("/{id}/cancel", name="outing_cancel", methods={"GET","POST"})
      */
-    public function delete(Request $request, Outing $outing): Response
+    public function cancel(Request $request, Outing $outing): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$outing->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($outing);
-            $entityManager->flush();
+
+        $stateRepo = $this->getDoctrine()->getRepository(State::class);
+        $form = $this->createForm(CancelOutingType::class, $outing);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $outing->setState($stateRepo->find(6));
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('app_home');
         }
 
-        return $this->redirectToRoute('outing_index');
+        return $this->render('outing/cancel.html.twig', [
+            'outing' => $outing,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/register/{id}", name="outing_register", methods={"POST"})
+     */
+    public function addParticipant(Outing $outing): Response
+    {
+        $outing->addParticipant($this->getUser());
+        $this->getDoctrine()->getManager()->flush();
+        $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
+        return $this->redirectToRoute('app_home');
     }
 }
