@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\Security\Authenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -89,6 +90,23 @@ class UserController extends AbstractController
             if(!empty($user->getPlainPassword())){   
                 $password = $encoder->encodePassword($user, $user->getPlainPassword());
                 $user->setPassword($password);
+            }
+            $profilePicture = $form->get('profilePicture')->getData();
+
+            if ($profilePicture){
+                $originalFilename = pathinfo($profilePicture->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$profilePicture->guessExtension();
+
+                try {
+                    $profilePicture->move(
+                        $this->getParameter('profile_pictures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e){
+
+                }
+                $user->setProfilePicture($newFilename);
             }
             
             $this->getDoctrine()->getManager()->flush();         
