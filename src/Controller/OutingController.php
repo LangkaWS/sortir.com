@@ -130,13 +130,8 @@ class OutingController extends AbstractController
      */
     public function edit(Request $request, Outing $outing): Response
     {
-        $organizer = $this->getUser();
-        $campus = $organizer->getCampus();
-
-        $outing->setOrganizer($organizer);
-        $outing->setCampus($campus);
         $form = $this->createForm(OutingType::class, $outing, [
-            'campus' => $campus
+            'campus' => $outing->getCampus()
         ]);
         $form->handleRequest($request);
 
