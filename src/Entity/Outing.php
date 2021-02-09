@@ -21,7 +21,7 @@ class Outing
     private $id;
 
     /**
-     * @Assert\Length(min=3, max=50, minMessage="Au moins {{ min }} caractères", maxMessage="Maximum 50 caractères")
+     * @Assert\Length(min=3, max=50, minMessage="Au moins {{ limit }} caractères", maxMessage="Maximum 50 caractères")
      * @ORM\Column(type="string", length=50)
      */
     private $outingName;
@@ -29,7 +29,6 @@ class Outing
     /**
      * @ORM\Column(type="datetime")
      * @Assert\GreaterThan("today", message="La date ne peut pas être passée.")
-     * @Assert\GreaterThan (propertyPath="registrationDeadLine", message="La date doit être postérieure à la clôture des inscriptions.")
      */
     private $startDate;
 
@@ -40,6 +39,7 @@ class Outing
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\LessThan(propertyPath="startDate", message="La date doit être antérieure à la date de la sortie.")
      */
     private $registrationDeadLine;
 
