@@ -30,7 +30,7 @@
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
                     {{ include('outing/_register_form.html.twig') }}
                     {% for participant in outing.participants %}
-                        {% if app.user == participant %}
+                        {% if app.user == participant and outing.registrationDeadLine > date('now')  %}
                             {% include "outing/_unregister_form.html.twig" %}
                         {% endif %}
                     {% endfor %}
