@@ -83,3 +83,6 @@
 # Migrations
 /migrations
 
+#pictures
+/public/uploads/profile_pictures/
+
