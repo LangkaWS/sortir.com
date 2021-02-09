@@ -29,6 +29,11 @@
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
                     {{ include('outing/_register_form.html.twig') }}
+                    {% for participant in outing.participants %}
+                        {% if app.user == participant %}
+                            {% include "outing/_unregister_form.html.twig" %}
+                        {% endif %}
+                    {% endfor %}
                 </td>
             </tr>
         {% else %}

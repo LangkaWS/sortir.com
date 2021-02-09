@@ -128,4 +128,16 @@ class OutingController extends AbstractController
         $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
         return $this->redirectToRoute('app_home');
     }
+
+    /**
+     * @Route("/unregister/{id}", name="outing_unregister", methods={"POST"})
+     */
+    public function removeParticipant(Outing $outing): Response
+    {
+        $outing->removeParticipant($this->getUser());
+        $this->getDoctrine()->getManager()->flush();
+        $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
+        return $this->redirectToRoute('app_home');
+    }
+
 }
