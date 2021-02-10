@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Location;
+use DateTime;
+use DateInterval;
+use App\Entity\State;
 use App\Entity\Outing;
 use App\Entity\State;
 use App\Form\OutingType;
@@ -26,7 +30,7 @@ class OutingController extends AbstractController
     public function index(OutingRepository $outingRepository): Response
     {
         return $this->render('outing/index.html.twig', [
-            'outings' => $outingRepository->findAll(),
+            'outings' => $outingRepository->findByNotArchived(1),
         ]);
     }
 
@@ -120,6 +124,11 @@ class OutingController extends AbstractController
      */
     public function show(Outing $outing): Response
     {
+        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
+            $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
+            return $this->redirectToRoute('app_home');
+        }
+        
         return $this->render('outing/show.html.twig', [
             'outing' => $outing,
         ]);
@@ -139,6 +148,11 @@ class OutingController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('outing_index');
+        }
+
+        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
+            $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('outing/edit.html.twig', [
@@ -163,6 +177,11 @@ class OutingController extends AbstractController
             $outing->setState($stateRepo->find(6));
             $this->getDoctrine()->getManager()->flush();
 
+            return $this->redirectToRoute('app_home');
+        }
+
+        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
+            $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
             return $this->redirectToRoute('app_home');
         }
 
