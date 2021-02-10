@@ -8,7 +8,6 @@ use DateTime;
 use DateInterval;
 use App\Entity\State;
 use App\Entity\Outing;
-use App\Entity\State;
 use App\Form\OutingType;
 use App\Form\CancelOutingType;
 use App\Repository\StateRepository;
