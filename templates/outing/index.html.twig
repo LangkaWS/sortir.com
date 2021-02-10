@@ -28,7 +28,9 @@
                 <td>
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
-                    {{ include('outing/_register_form.html.twig') }}
+                    {% if(date(outing.registrationDeadLine) > date()) %}
+                        {{ include('outing/_register_form.html.twig') }}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

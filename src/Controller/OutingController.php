@@ -196,9 +196,15 @@ class OutingController extends AbstractController
      */
     public function addParticipant(Outing $outing): Response
     {
-        $outing->addParticipant($this->getUser());
-        $this->getDoctrine()->getManager()->flush();
-        $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
-        return $this->redirectToRoute('app_home');
+        if ($outing->getRegistrationDeadLine()->getTimestamp() > time()){
+            $outing->addParticipant($this->getUser());
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
+            return $this->redirectToRoute('app_home');
+        } else {
+            $this->addFlash('warning', "Bien tenté petit malin, mais non. La date d'inscription est DEPASSEE, et la sentence est IRREVOCABLE.");
+            return $this->redirectToRoute('app_home');
+        }
+
     }
 }
