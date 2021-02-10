@@ -6,6 +6,7 @@ use App\Entity\State;
 use App\Entity\Outing;
 use App\Form\OutingType;
 use App\Form\CancelOutingType;
+use App\Form\FilterOutingType;
 use App\Repository\StateRepository;
 use App\Repository\OutingRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,24 +32,26 @@ class OutingController extends AbstractController
     }
 
     /**
-     * @Route("/filter", name="outing_filter")
+     * @Route("/filter", name="outing_filter", methods={"POST"})
      */
-    public function filter(Request $request)
+    public function filter(OutingRepository $outingRepository, Request $request)
     {
-        dump('hello');
-        $em = $this->getDoctrine()->getManager();
-        $outingRepo = $em->getRepository(Outing::class);
+        $campus = $request->request->get('campus');
+        $nameContains = $request->request->get('outingNameContains');
+        $minDate = $request->request->get('minDate');
+        $maxDate = $request->request->get('maxDate');
+        $isOrganizer = $request->request->get('isOrganizer');
+        $isParticipant = $request->request->get('isParticipant');
+        $isNotParticipant = $request->request->get('isNotParticipant');
+        $isPassed = $request->request->get('isPassed');
+        $user = $this->getUser();
 
-        $outings = $outingRepo->findWithFilter();
-        $responseArray = array();
+        $outings = $outingRepository->findWithFilter($campus, $nameContains, $minDate, $maxDate, $isOrganizer, $isParticipant, $isNotParticipant, $isPassed, $user);
 
-        foreach($outings as $o) {
-            $responseArray[] = $o;
-        }
-        dump($responseArray);
-
-        return new JsonResponse($responseArray);
+        return new Response(json_encode($outings));
     }
+
+    
 
     /**
      * @Route("/new", name="outing_new", methods={"GET","POST"})
