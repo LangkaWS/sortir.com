@@ -49,9 +49,7 @@ class OutingType extends AbstractType
             ])
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Date de la sortie :',
-                'date_widget' => 'single_text',
-                'date_label' => false,
-                'time_label' => false,
+                'widget' => 'single_text'
             ])
             ->add('duration', IntegerType::class, [
                 'label' => 'Durée (minutes) :',
