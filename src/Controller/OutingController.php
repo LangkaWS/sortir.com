@@ -141,7 +141,11 @@ class OutingController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
             return $this->redirectToRoute('app_home');
+        }else
+        {
+            return $this->redirectToRoute('app_home');
         }
+        
     }
 
 }
