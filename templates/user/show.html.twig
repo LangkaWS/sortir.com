@@ -5,7 +5,7 @@
 {% block main %}
     <h1>User</h1>
 
-    <img src="{{ asset('/uploads/profile_pictures/' ~ user.profilePicture ) }}" alt="Profile picture">
+    <img src="{{ asset('/uploads/profile_pictures/' ~ user.profilePicture) | imagine_filter('profile_picture') }}" alt="Profile picture">
 
     <table class="table">
         <tbody>
