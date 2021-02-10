@@ -33,8 +33,8 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-        {% for outing in outings %}
+        <tbody id="list">
+            {% for outing in outings %}
             <tr>
                 <td>{{ outing.outingName }}</td>
                 <td>{{ outing.startDate ? outing.startDate|date('Y-m-d H:i:s') : '' }}</td>
