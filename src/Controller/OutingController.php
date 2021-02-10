@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @Route("/outing")
@@ -134,10 +135,13 @@ class OutingController extends AbstractController
      */
     public function removeParticipant(Outing $outing): Response
     {
-        $outing->removeParticipant($this->getUser());
-        $this->getDoctrine()->getManager()->flush();
-        $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
-        return $this->redirectToRoute('app_home');
+        if ($outing->getStartDate() > new \DateTime('now'))
+        {
+            $outing->removeParticipant($this->getUser());
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
+            return $this->redirectToRoute('app_home');
+        }
     }
 
 }
