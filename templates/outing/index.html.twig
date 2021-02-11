@@ -48,8 +48,8 @@
                 <td>
 
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">Afficher</a>
-                    {% if outing.state.id is same as(1) %}
-                    <a href="{{ path('outing_edit', {'id': outing.id}) }}">Modifier</a>
+                    {% if outing.state.id is same as(1) and app.user is same as(outing.organizer) %}
+                        <a href="{{ path('outing_edit', {'id': outing.id}) }}">Modifier</a>
                     {% endif %}
                     {% if (date(outing.registrationDeadLine) > date()) %}
                         {% if app.user not in outing.participants and outing.state.id is same as(2) %}
