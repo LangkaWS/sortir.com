@@ -169,6 +169,10 @@ class OutingController extends AbstractController
             $form = $this->createForm(OutingType::class, $outing, [
                 'campus' => $outing->getCampus()
             ]);
+            if ($request->request->get('edit') == 'publish'){
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $outing->setState($stateRepo->find(2));
+            }
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
