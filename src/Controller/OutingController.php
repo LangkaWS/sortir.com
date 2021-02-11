@@ -221,6 +221,7 @@ class OutingController extends AbstractController
                 $outing->setState($stateRepo->find(6));
                 $this->getDoctrine()->getManager()->flush();
 
+                $this->addFlash('success', "La sortie a bien été annulée.");
                 return $this->redirectToRoute('app_home');
             }
 
