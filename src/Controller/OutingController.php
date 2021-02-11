@@ -212,35 +212,42 @@ class OutingController extends AbstractController
 
         if ($this->getUser()->getId() === $outing->getOrganizer()->getId()) {
 
-            $stateRepo = $this->getDoctrine()->getRepository(State::class);
-            $form = $this->createForm(CancelOutingType::class, $outing);
-            $form->handleRequest($request);
-
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $outing->setState($stateRepo->find(6));
-                $this->getDoctrine()->getManager()->flush();
-
-                $this->addFlash('success', "La sortie a bien été annulée.");
-                return $this->redirectToRoute('app_home');
+            if ($outing->getState()->getId() <= 3) {
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $form = $this->createForm(CancelOutingType::class, $outing);
+                $form->handleRequest($request);
+    
+    
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $outing->setState($stateRepo->find(6));
+                    $this->getDoctrine()->getManager()->flush();
+    
+                    return $this->redirectToRoute('app_home');
+                }
+    
+                if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
+                    $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
+                    return $this->redirectToRoute('app_home');
+                }
+    
+                return $this->render('outing/cancel.html.twig', [
+                    'outing' => $outing,
+                    'form' => $form->createView(),
+                    'action' => 'cancel'
+                ]);
+            } else {
+                $this->addFlash('warning', "Vous ne pouvez plus annuler cette sortie.");
+                return $this->redirectToRoute('outing_show', [
+                    'id' => $outing->getId()
+                ]);
             }
 
-            if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
-                $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
-                return $this->redirectToRoute('app_home');
-            }
-
-            return $this->render('outing/cancel.html.twig', [
-                'outing' => $outing,
-                'form' => $form->createView(),
-                'action' => 'cancel'
-            ]);
 
         } else {
             $this->addFlash('warning', "Accès refusé : vous n'êtes pas l'organisateur de cette sortie.");
             return $this->redirectToRoute('outing_show', [
                     'id' => $outing->getId()
-                ]);
+            ]);
         }
     }
 
