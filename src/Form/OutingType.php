@@ -47,9 +47,9 @@ class OutingType extends AbstractType
                     'placeholder' => 'Ma super sortie'
                 ],
             ])
-            ->add('startDate', DateTimeType::class, [
+            ->add('startDate', DateType::class, [
                 'label' => 'Date de la sortie :',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
             ])
             ->add('duration', IntegerType::class, [
                 'label' => 'Durée (minutes) :',
@@ -57,7 +57,7 @@ class OutingType extends AbstractType
             ])
             ->add('registrationDeadLine', DateType::class, [
                 'label' => 'Date limite d\'inscription',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
             ])
             ->add('maxParticipants', IntegerType::class, [
                 'label' => 'Nombre max de participants :',
