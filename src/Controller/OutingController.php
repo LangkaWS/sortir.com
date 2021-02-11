@@ -246,14 +246,17 @@ class OutingController extends AbstractController
      */
     public function removeParticipant(Outing $outing): Response
     {
-        if ($outing->getStartDate() > new \DateTime('now'))
-        {
+        if ($outing->getStartDate() > new \DateTime('now')) {
             $outing->removeParticipant($this->getUser());
+            if ($outing->getRegistrationDeadLine() > new DateTime() && count($outing->getParticipants()) < $outing->getMaxParticipants()) {
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $outing->setState($stateRepo->find(2));
+            }
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
+            $this->addFlash('success', 'Votre désinscription de la sortie a bien été enregistrée.');
             return $this->redirectToRoute('app_home');
-        }else
-        {
+        } else {
+            $this->addFlash('warning', "Vous ne pouvez plus vous désinscrire de cette sortie, elle a déjà commencé.");
             return $this->redirectToRoute('app_home');
         }
         
