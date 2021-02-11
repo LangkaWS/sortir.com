@@ -5,9 +5,10 @@
         <button class="btn btn-primary" value="create" name="create">Créer</button>
         <button class="btn btn-secondary" value="publish" name="create">Publier</button>
     {% elseif action == 'cancel' %}
-        <button class="btn btn-danger">Cancel</button>
+        <button class="btn btn-danger">Annuler</button>
     {% elseif action == 'edit' %}
-        <button class="btn btn-primary">Edit</button>
+        <button class="btn btn-primary" value="edit" name="edit">Modifier</button>
+        <button class="btn btn-primary" value="publish" name="edit">Publier</button>
     {% endif %}
 
 {{ form_end(form) }}
