@@ -9,8 +9,8 @@
     Date de la sortie : {{ outing.startDate|date('Y-m-d H:i:s') }}
     Campus : {{ outing.campus }}
     Lieu : {{ outing.location }}
-    {{ include('outing/_form.html.twig', {'button_label': 'Cancel'}) }}
-
+    {{ include('outing/_form.html.twig') }}
 
     <a href="{{ path('outing_index') }}">back to list</a>
+
 {% endblock %}
