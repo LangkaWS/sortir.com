@@ -230,7 +230,7 @@ class OutingController extends AbstractController
      */
     public function addParticipant(Outing $outing): Response
     {
-        if ($outing->getRegistrationDeadLine()->getTimestamp() > time() && count($outing->getParticipants()) < $outing->getMaxParticipants() && $outing->getState()->getId() == 2) {
+        if ($outing->getRegistrationDeadLine()->getTimestamp() > time() && count($outing->getParticipants()) < $outing->getMaxParticipants() && $outing->getState()->getId() === 2) {
             $outing->addParticipant($this->getUser());
             if (count($outing->getParticipants()) === $outing->getMaxParticipants()) {
                 $stateRepo = $this->getDoctrine()->getRepository(State::class);
@@ -240,7 +240,7 @@ class OutingController extends AbstractController
             $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
             return $this->redirectToRoute('app_home');
         } else {
-            $this->addFlash('warning', "Votre participation n'a pas pu être enregistrée car elle n'est plus/pas encore ouverte aux inscriptions.");
+            $this->addFlash('warning', "Votre participation n'a pas pu être enregistrée car elle n'est pas encore ou plus ouverte aux inscriptions.");
             return $this->redirectToRoute('app_home');
         }
 
