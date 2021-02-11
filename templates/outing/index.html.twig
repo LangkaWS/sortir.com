@@ -46,9 +46,10 @@
                 <td><a href="{{path('user_show', {'username': outing.organizer.username})}}">{{ outing.organizer.username }}</a></td>
                 <td>{{ outing.description }}</td>
                 <td>
-                    <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
+
+                    <a href="{{ path('outing_show', {'id': outing.id}) }}">Afficher</a>
                     {% if outing.state.id is same as(1) %}
-                    <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
+                    <a href="{{ path('outing_edit', {'id': outing.id}) }}">Modifier</a>
                     {% endif %}
                     {% if (date(outing.registrationDeadLine) > date()) %}
                         {% include "outing/_register_form.html.twig" %}
@@ -67,7 +68,7 @@
         </tbody>
     </table>
 
-    <a class="btn" href="{{ path('outing_new') }}">Create new</a>
+    <a class="btn" href="{{ path('outing_new') }}">Créer une sortie</a>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     <script>
@@ -103,8 +104,8 @@
                             + '<td>' + outing.organizer + '</td>'
                             + '<td>' + outing.description + '</td>'
                             + '<td>'
-                            + '<a href="/outing/' + outing.id + '/">show</a>'
-                            + '<a href="/outing/' + outing.id + '/">edit</a>'
+                            + '<a href="/outing/' + outing.id + '/">Afficher</a>'
+                            + '<a href="/outing/' + outing.id + '/">Modifier</a>'
                             + '<form method="post" action="/outing/register/' + outing.id + '">'
                             + '<button class="btn">S\'inscrire</button>'
                             + '</form></td></tr>');

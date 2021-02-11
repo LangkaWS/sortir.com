@@ -255,7 +255,7 @@ class OutingController extends AbstractController
                 $outing->setState($stateRepo->find(3));
             }
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
+            $this->addFlash('success', 'Votre inscription à la sortie a bien été enregistrée');
             return $this->redirectToRoute('app_home');
         } else {
             $this->addFlash('warning', "Votre participation n'a pas pu être enregistrée car la date limite d'inscription est dépassée ou le nombre maximum de participants a été atteint.");
