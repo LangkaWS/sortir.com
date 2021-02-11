@@ -42,7 +42,9 @@
 
     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
 
-    <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler la sortie</a>
+    {% if date(outing.startDate) > date() and app.user is same as(outing.organizer) %}
+        <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler la sortie</a>
+    {% endif %}
 
 <table>
     <thead>
