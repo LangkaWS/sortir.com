@@ -52,8 +52,11 @@
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">Modifier</a>
                     {% endif %}
                     {% if (date(outing.registrationDeadLine) > date()) %}
-                        {% include "outing/_register_form.html.twig" %}
+                        {% if app.user not in outing.participants and outing.state.id is same as(2) %}
+                            {% include "outing/_register_form.html.twig" %}
+                        {% endif %}
                     {% endif %}
+
                     {% if date(outing.startDate) > date() and app.user is same as(outing.organizer) %}
                         <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler</a>
                     {% endif %}
