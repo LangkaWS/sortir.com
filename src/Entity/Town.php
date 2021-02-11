@@ -39,7 +39,12 @@ class Town
         $this->locations = new ArrayCollection();
     }
 
-    public function getTownId(): ?int
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }

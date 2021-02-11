@@ -60,7 +60,7 @@ class Location
         return $this->name;
     }
 
-    public function getLocationId(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
