@@ -48,8 +48,16 @@
                 <td>
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
-                    {% if(date(outing.registrationDeadLine) > date()) %}
-                        {{ include('outing/_register_form.html.twig') }}
+                    {% if (date(outing.registrationDeadLine) > date()) %}
+                        {% include "outing/_register_form.html.twig" %}
+                    {% endif %}
+                    
+                    {% if (date(outing.startDate) > date()) %}
+                        {% for participant in outing.participants %}
+                            {% if app.user is same as(participant) %}
+                                {% include "outing/_unregister_form.html.twig" %}
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
                 </td>
             </tr>

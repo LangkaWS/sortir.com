@@ -234,4 +234,23 @@ class OutingController extends AbstractController
         }
 
     }
+
+    /**
+     * @Route("/unregister/{id}", name="outing_unregister", methods={"POST"})
+     */
+    public function removeParticipant(Outing $outing): Response
+    {
+        if ($outing->getStartDate() > new \DateTime('now'))
+        {
+            $outing->removeParticipant($this->getUser());
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
+            return $this->redirectToRoute('app_home');
+        }else
+        {
+            return $this->redirectToRoute('app_home');
+        }
+        
+    }
+
 }
