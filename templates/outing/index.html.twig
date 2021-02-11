@@ -42,7 +42,11 @@
                 <td>{{ outing.registrationDeadLine ? outing.registrationDeadLine|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ outing.participants|length }}/{{ outing.maxParticipants }}</td>
                 <td>{{ outing.state }}</td>
-                <td>A faire</td>
+                <td>
+                    {% if app.user in outing.participants %}
+                        X
+                    {% endif %}
+                </td>
                 <td><a href="{{path('user_show', {'username': outing.organizer.username})}}">{{ outing.organizer.username }}</a></td>
                 <td>{{ outing.description }}</td>
                 <td>
