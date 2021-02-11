@@ -165,15 +165,18 @@ class OutingController extends AbstractController
      */
     public function edit(Request $request, Outing $outing): Response
     {
-        if ($outing->getState()->getId() === 1 ){
+        if ($this->getUser()->getId() === $outing->getOrganizer()->getId()) {
+          
+          if ($outing->getState()->getId() === 1) {
             $form = $this->createForm(OutingType::class, $outing, [
                 'campus' => $outing->getCampus()
-            ]);
+                ]);
             $form->handleRequest($request);
-
+                
+    
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->getDoctrine()->getManager()->flush();
-
+    
                 return $this->redirectToRoute('outing_show', [
                     'id' => $outing->getId()
                 ]);
@@ -189,10 +192,16 @@ class OutingController extends AbstractController
                 'form' => $form->createView(),
                 'action' => 'edit'
             ]);
-        }else{
+          } else {
             $this->addFlash('warning', "Cette sortie n'est pas éditable.");
             return $this->redirectToRoute('app_home');
+          }
+
+        } else {
+            $this->addFlash('warning', "Accès refusé : vous n'êtes pas l'organisateur de cette sortie et/ou.");
+            return $this->redirectToRoute('app_home');
         }
+
     }
 
     /**
@@ -201,28 +210,37 @@ class OutingController extends AbstractController
     public function cancel(Request $request, Outing $outing): Response
     {
 
-        $stateRepo = $this->getDoctrine()->getRepository(State::class);
-        $form = $this->createForm(CancelOutingType::class, $outing);
-        $form->handleRequest($request);
+        if ($this->getUser()->getId() === $outing->getOrganizer()->getId()) {
+
+            $stateRepo = $this->getDoctrine()->getRepository(State::class);
+            $form = $this->createForm(CancelOutingType::class, $outing);
+            $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $outing->setState($stateRepo->find(6));
-            $this->getDoctrine()->getManager()->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $outing->setState($stateRepo->find(6));
+                $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_home');
+            }
+
+            if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
+                $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
+                return $this->redirectToRoute('app_home');
+            }
+
+            return $this->render('outing/cancel.html.twig', [
+                'outing' => $outing,
+                'form' => $form->createView(),
+                'action' => 'cancel'
+            ]);
+
+        } else {
+            $this->addFlash('warning', "Accès refusé : vous n'êtes pas l'organisateur de cette sortie.");
+            return $this->redirectToRoute('outing_show', [
+                    'id' => $outing->getId()
+                ]);
         }
-
-        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
-            $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
-            return $this->redirectToRoute('app_home');
-        }
-
-        return $this->render('outing/cancel.html.twig', [
-            'outing' => $outing,
-            'form' => $form->createView(),
-            'action' => 'cancel'
-        ]);
     }
 
     /**
