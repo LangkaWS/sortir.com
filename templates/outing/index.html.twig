@@ -1,5 +1,25 @@
 {% block main %}
-    <h1>Outing index</h1>
+    <div>
+        Filtrer les sorties
+        <form id="filter_outing">
+            <select id="campus" name="campus">
+                {% for campus in campusList %}
+                <option value="{{ campus.id }}">{{ campus.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="outingNameContains">Le nom de la sortie contient : </label>
+            <input type="text" name="outingNameContains" id="outingNameContains" /><br>
+            <label for="minDate">Entre</label>
+            <input type="date" name="minDate" id="minDate">
+            <label for="maxDate">et</label>
+            <input type="date" name="maxDate" id="maxDate">
+            <input type="checkbox" id="isOrganizer" name="isOrganizer"><label for="isOrganizer">Sorties dont je suis l'organisateur/trice</label>
+            <input type="checkbox" id="isParticipant" name="isParticipant"><label for="isParticipant">Sorties auxquelles je suis inscrit/e</label>
+            <input type="checkbox" id="isNotParticipant" name="isNotParticipant"><label for="isNotParticipant">Sorties auxquelles je ne suis pas inscrit/e</label>
+            <input type="checkbox" id="isPassed" name="isPassed"><label for="isPassed">Sorties passées</label>
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
 
     <table class="table">
         <thead>
@@ -14,8 +34,8 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-        {% for outing in outings %}
+        <tbody id="list">
+            {% for outing in outings %}
             <tr>
                 <td>{{ outing.outingName }}</td>
                 <td>{{ outing.startDate ? outing.startDate|date('Y-m-d H:i:s') : '' }}</td>
@@ -41,13 +61,55 @@
                     {% endif %}
                 </td>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
+            {% endfor %}
         </tbody>
     </table>
 
     <a class="btn" href="{{ path('outing_new') }}">Create new</a>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+    <script>
+        $("#filter_outing").submit((event) => {
+            event.preventDefault();
+
+            const list = $('#list');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ path('outing_filter') }}",
+                data: {
+                    campus: $('#campus').val(),
+                    outingNameContains: $('#outingNameContains').val(),
+                    minDate: $('#minDate').val(),
+                    maxDate: $('#maxDate').val(),
+                    isOrganizer: $('#isOrganizer').prop('checked') === true ? $('#isOrganizer').val() : '',
+                    isParticipant: $('#isParticipant').prop('checked') === true ? $('#isParticipant').val() : '',
+                    isNotParticipant: $('#isNotParticipant').prop('checked') === true ? $('#isNotParticipant').val() : '',
+                    isPassed: $('#isPassed').prop('checked') === true ? $('#isPassed').val() : ''
+                },
+                success: (outings) => {
+                    const outingsList = JSON.parse(outings);
+                    list.empty();
+                    const items = [];
+                    $.each(outingsList, (index, outing) => {
+                        items.push('<tr><td>' + outing.outingName + '</td>'
+                            + '<td>' + moment(outing.startDate.date).format('DD/MM/YYYY HH:mm:ss') + '</td>'
+                            + '<td>' + moment(outing.registrationDeadLine.date).format('DD/MM/YYYY') + '</td>'
+                            + '<td>' + outing.participants + '/' + outing.maxParticipants + '</td>'
+                            + '<td>' + outing.state + '</td>'
+                            + '<td>' + 'A faire' + '</td>'
+                            + '<td>' + outing.organizer + '</td>'
+                            + '<td>' + outing.description + '</td>'
+                            + '<td>'
+                            + '<a href="/outing/' + outing.id + '/">show</a>'
+                            + '<a href="/outing/' + outing.id + '/">edit</a>'
+                            + '<form method="post" action="/outing/register/' + outing.id + '">'
+                            + '<button class="btn">S\'inscrire</button>'
+                            + '</form></td></tr>');
+                    });
+                    list.append(items.join(''));
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -50,6 +50,60 @@ class OutingRepository extends ServiceEntityRepository
     }
     */
 
+    public function findWithFilter($campus, $nameContains, $minDate, $maxDate, $isOrganizer, $isParticipant, $isNotParticipant, $isPassed, $user)
+    {
+        $qb = $this->createQueryBuilder('o');
+  
+        $qb->andWhere('o.startDate >= :val')
+            ->setParameter('val', (new DateTime())->sub(new DateInterval("P1M"))->format("Y-m-d H:i:s"));
+            
+
+        if($campus) {
+            $qb->andWhere('o.campus = :campus')
+            ->setParameter('campus', $campus);
+        }
+
+        if($nameContains) {
+            $qb->andWhere('o.outingName LIKE :name')
+            ->setParameter('name', '%'.$nameContains.'%');
+        }
+
+        if($minDate && $maxDate) {
+            $qb->andWhere('o.startDate BETWEEN :minDate AND :maxDate')
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate);
+        } else if($minDate) {
+            $qb->andWhere('o.startDate >= :minDate')
+            ->setParameter('minDate', ($minDate.' 00:00:00'));
+        } else if($maxDate) {
+            $qb->andWhere('o.startDate <= :maxDate')
+            ->setParameter('maxDate', ($maxDate.' 00:00:00'));
+        }
+
+        if($isOrganizer) {
+            $qb->andWhere('o.organizer = :organizer')
+            ->setParameter('organizer', $user);
+        }
+
+        if($isParticipant) {
+            $qb->andWhere(':user MEMBER OF o.participants')
+            ->setParameter('user', $user);
+        }
+
+        if($isNotParticipant) {
+            $qb->andWhere(':user NOT MEMBER OF o.participants')
+            ->setParameter('user', $user);
+        }
+
+        if($isPassed) {
+            $qb->andWhere('o.state = :val')
+            ->setParameter('val', 5);
+        }
+
+
+        return $qb->orderBy('o.startDate', 'ASC')->getQuery()->getResult();
+    }
+
     public function findByNotArchived($value)
     {
         return $this->createQueryBuilder('o')

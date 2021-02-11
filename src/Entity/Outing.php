@@ -6,12 +6,13 @@ use App\Repository\OutingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OutingRepository::class)
  */
-class Outing
+class Outing implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -90,6 +91,24 @@ class Outing
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            "id" => $this->id,
+            "outingName" => $this->outingName,
+            "startDate" => $this->startDate,
+            "duration" => $this->duration,
+            "registrationDeadLine" => $this->registrationDeadLine,
+            "maxParticipants" => $this->maxParticipants,
+            "description" => $this->description,
+            "state" => $this->state->getWording(),
+            "campus" => $this->campus->getId(),
+            "organizer" => $this->organizer->getUsername(),
+            "participants" => sizeof($this->participants),
+            "cancellationReason" => $this->cancellationReason,
+        );
     }
 
     public function getId(): ?int

@@ -8,13 +8,11 @@
     <p>Participant : {{ app.user.username }}</p>
 </div>
 
-<div>
-    Filtrer les sorties
-</div>
+{{ render(controller(
+    'App\\Controller\\OutingController::index'
+)) }}
+{% endblock %}
 
-<div>
-    {{ render(controller(
-        'App\\Controller\\OutingController::index'
-    )) }}
-</div>
+{% block javascripts %}
+    
 {% endblock %}

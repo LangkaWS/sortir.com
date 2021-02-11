@@ -10,6 +10,8 @@ use App\Entity\State;
 use App\Entity\Outing;
 use App\Form\OutingType;
 use App\Form\CancelOutingType;
+use App\Form\FilterOutingType;
+use App\Repository\CampusRepository;
 use App\Repository\StateRepository;
 use App\Repository\OutingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Json;
+
 
 /**
  * @Route("/outing")
@@ -26,12 +30,35 @@ class OutingController extends AbstractController
     /**
      * @Route("/", name="outing_index", methods={"GET"})
      */
-    public function index(OutingRepository $outingRepository): Response
+    public function index(OutingRepository $outingRepository, CampusRepository $campusRepository): Response
     {
         return $this->render('outing/index.html.twig', [
             'outings' => $outingRepository->findByNotArchived(1),
+            'campusList' => $campusRepository->findAll()
         ]);
     }
+
+    /**
+     * @Route("/filter", name="outing_filter", methods={"POST"})
+     */
+    public function filter(OutingRepository $outingRepository, Request $request)
+    {
+        $campus = $request->request->get('campus');
+        $nameContains = $request->request->get('outingNameContains');
+        $minDate = $request->request->get('minDate');
+        $maxDate = $request->request->get('maxDate');
+        $isOrganizer = $request->request->get('isOrganizer');
+        $isParticipant = $request->request->get('isParticipant');
+        $isNotParticipant = $request->request->get('isNotParticipant');
+        $isPassed = $request->request->get('isPassed');
+        $user = $this->getUser();
+
+        $outings = $outingRepository->findWithFilter($campus, $nameContains, $minDate, $maxDate, $isOrganizer, $isParticipant, $isNotParticipant, $isPassed, $user);
+
+        return new Response(json_encode($outings));
+    }
+
+    
 
     /**
      * @Route("/new", name="outing_new", methods={"GET","POST"})
