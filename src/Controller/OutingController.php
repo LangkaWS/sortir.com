@@ -225,13 +225,17 @@ class OutingController extends AbstractController
      */
     public function addParticipant(Outing $outing): Response
     {
-        if ($outing->getRegistrationDeadLine()->getTimestamp() > time()){
+        if ($outing->getRegistrationDeadLine()->getTimestamp() > time() && count($outing->getParticipants()) < $outing->getMaxParticipants()) {
             $outing->addParticipant($this->getUser());
+            if (count($outing->getParticipants()) === $outing->getMaxParticipants()) {
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $outing->setState($stateRepo->find(3));
+            }
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
             return $this->redirectToRoute('app_home');
         } else {
-            $this->addFlash('warning', "Bien tenté petit malin, mais non. La date d'inscription est DEPASSEE, et la sentence est IRREVOCABLE.");
+            $this->addFlash('warning', "Votre participation n'a pas pu être enregistrée car la date limite d'inscription est dépassée ou le nombre maximum de participants a été atteint.");
             return $this->redirectToRoute('app_home');
         }
 
