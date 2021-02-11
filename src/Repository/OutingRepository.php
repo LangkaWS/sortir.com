@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Outing;
+use DateInterval;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +49,15 @@ class OutingRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByNotArchived($value)
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.startDate >= :val')
+            ->setParameter('val', (new DateTime())->sub(new DateInterval("P".$value."M"))->format("Y-m-d H:i:s"))
+            ->orderBy('o.startDate', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
