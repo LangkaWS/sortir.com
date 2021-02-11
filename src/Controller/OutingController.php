@@ -165,29 +165,37 @@ class OutingController extends AbstractController
      */
     public function edit(Request $request, Outing $outing): Response
     {
-        $form = $this->createForm(OutingType::class, $outing, [
-            'campus' => $outing->getCampus()
-        ]);
-        $form->handleRequest($request);
+        if ($this->getUser()->getId() === $outing->getOrganizer()->getId()) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('outing_show', [
-                'id' => $outing->getId()
+            $form = $this->createForm(OutingType::class, $outing, [
+                'campus' => $outing->getCampus()
+                ]);
+            $form->handleRequest($request);
+                
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->getDoctrine()->getManager()->flush();
+    
+                return $this->redirectToRoute('outing_show', [
+                    'id' => $outing->getId()
+                ]);
+            }
+    
+            if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
+                $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
+                return $this->redirectToRoute('app_home');
+            }
+    
+            return $this->render('outing/edit.html.twig', [
+                'outing' => $outing,
+                'form' => $form->createView(),
+                'action' => 'edit'
             ]);
-        }
-
-        if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
-            $this->addFlash('warning', "Cette sortie est archivée, elle n'est plus consultable.");
+        } else {
+            $this->addFlash('warning', "Accès refusé : vous n'êtes pas l'organisateur de cette sortie.");
             return $this->redirectToRoute('app_home');
         }
-
-        return $this->render('outing/edit.html.twig', [
-            'outing' => $outing,
-            'form' => $form->createView(),
-            'action' => 'edit'
-        ]);
+        
     }
 
     /**
