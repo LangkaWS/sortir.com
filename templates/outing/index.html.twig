@@ -47,7 +47,9 @@
                 <td>{{ outing.description }}</td>
                 <td>
                     <a href="{{ path('outing_show', {'id': outing.id}) }}">show</a>
+                    {% if outing.state.id is same as(1) %}
                     <a href="{{ path('outing_edit', {'id': outing.id}) }}">edit</a>
+                    {% endif %}
                     {% if (date(outing.registrationDeadLine) > date()) %}
                         {% if app.user not in outing.participants.toArray and outing.state.id == 2 %}
                             {% include "outing/_register_form.html.twig" %}
