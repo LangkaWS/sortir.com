@@ -10,4 +10,62 @@
     <a href="{{ path('app_home') }}">back to list</a>
 
     <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler la sortie</a>
+
+    <script>
+        var $town = $('#outing_town');
+        console.log($town.val());
+        // When town gets selected ...
+        $town.change(function() {
+
+            // Submit data via AJAX to the form's action path.
+            $.ajax({
+                url : "{{ path('outing_list_locations') }}",
+                type: "GET",
+                data : {
+                    "townid": $town.val()
+                },
+                success: function (locations) {
+                    var locationsSelect = $('#outing_location');
+                    var adress = $('#outing_adress');
+                    adress.val('');
+                    var latitude = $('#outing_latitude');
+                    latitude.val('');
+                    var longitude = $('#outing_longitude');
+                    longitude.val('');
+                    locationsSelect.empty();
+                    locationsSelect.append('<option value>Choisissez votre lieu</option>')
+                    $.each(locations, function(key, location) {
+                        console.log(location);
+                        locationsSelect.append('<option value="' + location.id + '">' + location.name + '</option>');
+                    });
+                },
+                error: function(err) {
+                    alert('An error occurred');
+                }
+            });
+        });
+        var $location = $('#outing_location');
+        // When location gets selected ...
+        $location.change(function() {
+            $.ajax({
+                url: "{{ path('outing_location_informations') }}",
+                type: "GET",
+                data : {
+                    "locationId": $location.val()
+                },
+                success: function (location) {
+                    var adress = $('#outing_adress');
+                    adress.val(location.adress);
+                    var latitude = $('#outing_latitude');
+                    latitude.val(location.latitude);
+                    var longitude = $('#outing_longitude');
+                    longitude.val(location.longitude);
+                },
+                error: function(err) {
+                    alert('An error occurred');
+                }
+
+            })
+        });
+    </script>
 {% endblock %}
