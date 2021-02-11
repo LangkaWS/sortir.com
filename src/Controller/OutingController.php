@@ -174,7 +174,9 @@ class OutingController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->getDoctrine()->getManager()->flush();
 
-                return $this->redirectToRoute('outing_index');
+                return $this->redirectToRoute('outing_show', [
+                    'id' => $outing->getId()
+                ]);
             }
 
             if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
@@ -228,13 +230,17 @@ class OutingController extends AbstractController
      */
     public function addParticipant(Outing $outing): Response
     {
-        if ($outing->getRegistrationDeadLine()->getTimestamp() > time()){
+        if ($outing->getRegistrationDeadLine()->getTimestamp() > time() && count($outing->getParticipants()) < $outing->getMaxParticipants()) {
             $outing->addParticipant($this->getUser());
+            if (count($outing->getParticipants()) === $outing->getMaxParticipants()) {
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $outing->setState($stateRepo->find(3));
+            }
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
             return $this->redirectToRoute('app_home');
         } else {
-            $this->addFlash('warning', "Bien tenté petit malin, mais non. La date d'inscription est DEPASSEE, et la sentence est IRREVOCABLE.");
+            $this->addFlash('warning', "Votre participation n'a pas pu être enregistrée car la date limite d'inscription est dépassée ou le nombre maximum de participants a été atteint.");
             return $this->redirectToRoute('app_home');
         }
 
@@ -245,14 +251,17 @@ class OutingController extends AbstractController
      */
     public function removeParticipant(Outing $outing): Response
     {
-        if ($outing->getStartDate() > new \DateTime('now'))
-        {
+        if ($outing->getStartDate() > new \DateTime('now')) {
             $outing->removeParticipant($this->getUser());
+            if ($outing->getRegistrationDeadLine() > new DateTime() && count($outing->getParticipants()) < $outing->getMaxParticipants()) {
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $outing->setState($stateRepo->find(2));
+            }
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'Votre annulation à la sortie à bien été prise en compte');
+            $this->addFlash('success', 'Votre désinscription de la sortie a bien été enregistrée.');
             return $this->redirectToRoute('app_home');
-        }else
-        {
+        } else {
+            $this->addFlash('warning', "Vous ne pouvez plus vous désinscrire de cette sortie, elle a déjà commencé.");
             return $this->redirectToRoute('app_home');
         }
         
