@@ -146,7 +146,9 @@ class OutingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('outing_index');
+            return $this->redirectToRoute('outing_show', [
+                'id' => $outing->getId()
+            ]);
         }
 
         if($outing->getStartDate() <= (new DateTime())->sub(new DateInterval("P1M"))) {
