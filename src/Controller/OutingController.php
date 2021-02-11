@@ -7,6 +7,7 @@ use App\Entity\Outing;
 use App\Form\OutingType;
 use App\Form\CancelOutingType;
 use App\Form\FilterOutingType;
+use App\Repository\CampusRepository;
 use App\Repository\StateRepository;
 use App\Repository\OutingRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +25,11 @@ class OutingController extends AbstractController
     /**
      * @Route("/", name="outing_index", methods={"GET"})
      */
-    public function index(OutingRepository $outingRepository): Response
+    public function index(OutingRepository $outingRepository, CampusRepository $campusRepository): Response
     {
         return $this->render('outing/index.html.twig', [
             'outings' => $outingRepository->findAll(),
+            'campusList' => $campusRepository->findAll()
         ]);
     }
 

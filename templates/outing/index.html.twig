@@ -3,8 +3,9 @@
         Filtrer les sorties
         <form id="filter_outing">
             <select id="campus" name="campus">
-                <option value="1">campus</option>
-                <option value="2">Campus de Strasbourg</option>
+                {% for campus in campusList %}
+                <option value="{{ campus.id }}">{{ campus.name }}</option>
+                {% endfor %}
             </select>
             <label for="outingNameContains">Le nom de la sortie contient : </label>
             <input type="text" name="outingNameContains" id="outingNameContains" /><br>
