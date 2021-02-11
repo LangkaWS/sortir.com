@@ -226,7 +226,7 @@ class OutingController extends AbstractController
         if ($outing->getRegistrationDeadLine()->getTimestamp() > time()){
             $outing->addParticipant($this->getUser());
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'Votre inscription a bien été enregsitrée');
+            $this->addFlash('success', 'Votre inscription à la sortie a bien été enregistrée');
             return $this->redirectToRoute('app_home');
         } else {
             $this->addFlash('warning', "Bien tenté petit malin, mais non. La date d'inscription est DEPASSEE, et la sentence est IRREVOCABLE.");
