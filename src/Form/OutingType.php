@@ -89,7 +89,8 @@ class OutingType extends AbstractType
             'required' => true,
             'placeholder' => 'Choisissez une ville',
             'mapped' => false,
-            'label' => 'Ville :'
+            'label' => 'Ville :',
+            'data' => $town
         ));
 
         $form->add('location', EntityType::class, array(
