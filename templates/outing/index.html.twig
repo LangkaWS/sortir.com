@@ -54,6 +54,9 @@
                     {% if (date(outing.registrationDeadLine) > date()) %}
                         {% include "outing/_register_form.html.twig" %}
                     {% endif %}
+                    {% if date(outing.startDate) > date() and app.user is same as(outing.organizer) %}
+                        <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler</a>
+                    {% endif %}
                     
                     {% if (date(outing.startDate) > date()) %}
                         {% for participant in outing.participants %}
