@@ -55,8 +55,8 @@ class OutingRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('o');
   
         $qb->andWhere('o.startDate >= :val')
-            ->setParameter('val', (new DateTime())->sub(new DateInterval("P".$value."M"))->format("Y-m-d H:i:s"))
-            ->orderBy('o.startDate', 'ASC')
+            ->setParameter('val', (new DateTime())->sub(new DateInterval("P1M"))->format("Y-m-d H:i:s"));
+            
 
         if($campus) {
             $qb->andWhere('o.campus = :campus')
@@ -101,7 +101,8 @@ class OutingRepository extends ServiceEntityRepository
         }
 
 
-        return $qb->getQuery()->getResult()
+        return $qb->orderBy('o.startDate', 'ASC')->getQuery()->getResult();
+    }
 
     public function findByNotArchived($value)
     {
