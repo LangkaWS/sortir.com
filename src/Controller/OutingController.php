@@ -202,7 +202,7 @@ class OutingController extends AbstractController
           }
 
         } else {
-            $this->addFlash('warning', "Accès refusé : vous n'êtes pas l'organisateur de cette sortie et/ou.");
+            $this->addFlash('warning', "Accès refusé : vous n'êtes pas l'organisateur de cette sortie.");
             return $this->redirectToRoute('app_home');
         }
 

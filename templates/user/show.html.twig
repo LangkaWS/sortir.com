@@ -3,14 +3,20 @@
 {% block title %}User{% endblock %}
 
 {% block main %}
-    <h1>User</h1>
+    {% if app.user is same as(user) %}
+        <h1>Mon profil</h1>
+    {% else %}
+        <h1>{{ user.username }}</h1>
+    {% endif %}
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Pseudo</th>
-                <td>{{ user.username }}</td>
-            </tr>
+            {% if app.user is same as(user) %}
+                <tr>
+                    <th>Pseudo</th>
+                    <td>{{ user.username }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Nom</th>
                 <td>{{ user.lastName }}</td>
@@ -36,6 +42,6 @@
 
     <a href="{{ path('app_home') }}">Accueil</a>
     {% if user == app.user %}
-    <a href="{{ path('user_edit', {'username': user.username}) }}">edit</a>
+    <a href="{{ path('user_edit', {'username': user.username}) }}">Modifier</a>
     {% endif %}
 {% endblock %}

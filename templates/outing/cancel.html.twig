@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Outing{% endblock %}
+{% block title %}Annuler la sortie{% endblock %}
 
 {% block main %}
-    <h1>Cancel Outing</h1>
+    <h1>Annuler votre sortie</h1>
 
     Nom de la sortie : {{ outing.outingName }}
     Date de la sortie : {{ outing.startDate|date('Y-m-d H:i:s') }}
@@ -11,6 +11,6 @@
     Lieu : {{ outing.location }}
     {{ include('outing/_form.html.twig') }}
 
-    <a href="{{ path('app_home') }}">back to list</a>
+    <a href="{{ path('app_home') }}">Accueil</a>
 
 {% endblock %}

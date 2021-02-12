@@ -3,6 +3,7 @@
         Filtrer les sorties
         <form id="filter_outing">
             <select id="campus" name="campus">
+                <option value selected>Choisissez un campus</option>
                 {% for campus in campusList %}
                 <option value="{{ campus.id }}">{{ campus.name }}</option>
                 {% endfor %}
