@@ -62,7 +62,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if date(outing.startDate) > date() and app.user is same as(outing.organizer) and outing.state.id is not 6 %}
+                    {% if date(outing.startDate) > date() and app.user is same as(outing.organizer) %}
                         <a href="{{ path('outing_cancel', {'id': outing.id}) }}">Annuler</a>
                     {% endif %}
                     
