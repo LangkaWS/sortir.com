@@ -71,7 +71,7 @@ class Authenticator extends AbstractFormLoginAuthenticator implements PasswordAu
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Mauvais identifiants.');
         }
 
         return $user;
@@ -79,6 +79,10 @@ class Authenticator extends AbstractFormLoginAuthenticator implements PasswordAu
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if (!$this->passwordEncoder->isPasswordValid($user, $credentials['password'])) {
+            // fail authentication with a custom error
+            throw new CustomUserMessageAuthenticationException('Mauvais identifiants.');
+        }
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
