@@ -79,6 +79,7 @@ class UserController extends AbstractController
     public function edit(Request $request, User $user, UserPasswordEncoderInterface $encoder): Response
     {
         if($user->getEmail() != $this->getUser()->getEmail()){
+            $this->addFlash('warning', "Accès refusé : vous n'êtes pas le propriétaire de ce profil.");
             return $this->redirectToRoute('app_home');
         }
 
