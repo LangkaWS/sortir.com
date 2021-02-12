@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
@@ -24,6 +25,7 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\Length(max=180, maxMessage="L'email ne doit pas dépasser {{ limit }} caractères")
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -42,21 +44,25 @@ class User implements UserInterface
     private $plainPassword;
 
     /**
+     * @Assert\Length(max=30, maxMessage="Le pseudo ne doit pas dépasser {{ limit }} caractères")
      * @ORM\Column(type="string", length=30, unique=true)
      */
     private $username;
 
     /**
+     * @Assert\Length(max=30, maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères")
      * @ORM\Column(type="string", length=30)
      */
     private $lastName;
 
     /**
+     * @Assert\Length(max=30, maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères")
      * @ORM\Column(type="string", length=30)
      */
     private $firstName;
 
     /**
+     * @Assert\Length(max=15, maxMessage="Le numéro de téléphone ne doit pas dépasser {{ limit }} caractères")
      * @ORM\Column(type="string", length=15, nullable=true)
      */
     private $phone;
